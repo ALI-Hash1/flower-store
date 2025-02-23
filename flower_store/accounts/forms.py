@@ -1,6 +1,8 @@
 from django import forms
 from django.forms import PasswordInput
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.core.exceptions import ValidationError
+from .models import User
 
 from .models import User
 from django.core.exceptions import ValidationError
@@ -39,3 +41,28 @@ class UserChangeForm(forms.ModelForm):
         model = User
         fields = ('phone_number', 'email', 'password')
 
+
+class RegisterForm(forms.Form):
+    phone_number = forms.CharField(max_length=11, min_length=11)
+    password1 = forms.CharField(widget=forms.PasswordInput, label='Password')
+    password2 = forms.CharField(widget=forms.PasswordInput, label='Confirm Password')
+
+    def clean(self):
+        cd = super().clean()
+        p1 = cd.get('password1')
+        p2 = cd.get('password2')
+        if p1 and p2 and p1 != p2:
+            raise ValidationError("رمز عبور تایید شده شما مطابقت ندارد")
+
+    def clean_phone_number(self):
+        phone = self.cleaned_data.get('phone_number')
+
+        # بررسی شروع شماره با 09
+        if not phone.startswith('09'):
+            raise ValidationError("شماره تلفن باید با 09 شروع شود")
+        return phone
+
+
+class LoginForm(forms.Form):
+    phone_number = forms.CharField(max_length=11, min_length=11)
+    password = forms.CharField(widget=forms.PasswordInput, label='Password')
