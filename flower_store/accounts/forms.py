@@ -60,9 +60,17 @@ class RegisterForm(forms.Form):
         # بررسی شروع شماره با 09
         if not phone.startswith('09'):
             raise ValidationError("شماره تلفن باید با 09 شروع شود")
+
+        user = User.objects.filter(phone_number=phone)
+        if user:
+            raise ValidationError('این شماره تلفن قبلا ثبت شده است')
         return phone
 
 
 class LoginForm(forms.Form):
     phone_number = forms.CharField(max_length=11, min_length=11)
     password = forms.CharField(widget=forms.PasswordInput, label='Password')
+
+
+class VerifyCodeForm(forms.Form):
+    code = forms.IntegerField()
