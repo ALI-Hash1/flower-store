@@ -37,10 +37,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # local apps
     'home',
     'accounts',
     'products',
     'orders',
+
+    # third-party apps
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
