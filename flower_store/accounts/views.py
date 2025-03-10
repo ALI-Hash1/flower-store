@@ -6,11 +6,11 @@ from .forms import RegisterForm, LoginForm, VerifyCodeForm
 from .models import User, OtpCode
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
-from utils import send_otp_code
+from utils import send_otp_code, AnonymousRequiredMixin
 from random import randint
 
 
-class RegisterView(View):
+class RegisterView(AnonymousRequiredMixin, View):
     form = RegisterForm
     template_name = 'accounts/register.html'
 
@@ -30,7 +30,7 @@ class RegisterView(View):
         return render(request, self.template_name, {'form': form})
 
 
-class LoginView(View):
+class LoginView(AnonymousRequiredMixin, View):
     form = LoginForm
     template_name = 'accounts/login.html'
 
