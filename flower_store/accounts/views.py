@@ -1,5 +1,6 @@
 import datetime
 import pytz
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, redirect
 from django.views import View
 from .forms import RegisterForm, LoginForm, VerifyCodeForm
@@ -8,6 +9,7 @@ from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from utils import send_otp_code, AnonymousRequiredMixin
 from random import randint
+from django.shortcuts import get_object_or_404
 
 
 class RegisterView(AnonymousRequiredMixin, View):
@@ -85,3 +87,14 @@ class RegisterVerifyCodeView(View):
                 messages.error(request, 'this code is wrong', 'danger')
                 return redirect('accounts:verify_code')
         return render(request, 'accounts/verify.html', {'form': form})
+
+
+class ProfileView(UserPassesTestMixin, View):
+    def test_func(self):
+        user_id = self.kwargs.get('user_id')
+        return self.request.user.is_authenticated and self.request.user.id == user_id
+
+    def get(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
+        return render(request, 'accounts/profile.html', context={'user': user})
+
