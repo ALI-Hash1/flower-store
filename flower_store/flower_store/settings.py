@@ -139,3 +139,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # MEDIA FILE CONFIG
 MEDIA_URL = '/media-files/'
 MEDIA_ROOT = BASE_DIR / 'media-files'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.office365.com'  # آدرس سرور SMTP
+EMAIL_PORT = 587  # پورت ارسال ایمیل
+EMAIL_USE_TLS = True  # استفاده از TLS برای امنیت
+EMAIL_HOST_USER = 'seyedALIHASH1@hotmail.com'  # آدرس ایمیل Hotmail شما
+EMAIL_HOST_PASSWORD = 'A1B2$$C3'  # رمز عبور یا App Password
+
+# connecting google free email service
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'shashmy744@gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_PASSWORD = 'rbivllbeyyfaczrc'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'flower store website'

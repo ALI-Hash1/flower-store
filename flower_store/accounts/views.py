@@ -10,6 +10,8 @@ from django.contrib.auth import login, logout, authenticate
 from utils import send_otp_code, AnonymousRequiredMixin
 from random import randint
 from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
+from django.contrib.auth import views as auth_views
 
 
 class RegisterView(AnonymousRequiredMixin, View):
@@ -98,3 +100,22 @@ class ProfileView(UserPassesTestMixin, View):
         user = get_object_or_404(User, id=user_id)
         return render(request, 'accounts/profile.html', context={'user': user})
 
+
+class PasswordResetView(auth_views.PasswordResetView):
+    template_name = 'accounts/password-reset-form.html'
+    success_url = reverse_lazy('accounts:user_reset_password_done')
+    email_template_name = 'accounts/password-reset-email.html'
+
+
+class PasswordResetDoneView(auth_views.PasswordResetDoneView):
+    template_name = 'accounts/password-reset-done.html'
+
+
+class PasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+    template_name = 'accounts/password-reset-confirm.html'
+    success_url = reverse_lazy('accounts:user_login')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'رمز عبور شما با موفقیت تغییر پیدا کرد.')
+        return response

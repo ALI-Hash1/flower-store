@@ -10,18 +10,20 @@ from django.core.exceptions import ValidationError
 
 class UserCreationForm(forms.ModelForm):
     password1 = forms.CharField(label="password", widget=forms.PasswordInput)
-    password2 = forms.CharField(label="confirm password", widget=PasswordInput)
+    password2 = forms.CharField(label="confirm password", widget=forms.PasswordInput)
 
     class Meta:
         model = User
-        fields = ('phone_number',)
+        fields = ('phone_number', 'email')
 
     def clean_password2(self):
         cd = self.cleaned_data
-        if cd['password1'] and cd['password2'] and cd['password1'] != cd['password2']:
-            raise ValidationError("password don't match")
+        passwd1 = cd.get('password1')
+        passwd2 = cd.get('password2')
+        if passwd1 and passwd2 and passwd1 != passwd2:
+            raise ValidationError("passwords don't match")
 
-        return cd['password1']
+        return passwd2
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -53,6 +55,7 @@ class RegisterForm(forms.Form):
         p2 = cd.get('password2')
         if p1 and p2 and p1 != p2:
             raise ValidationError("رمز عبور تایید شده شما مطابقت ندارد")
+        return cd
 
     def clean_phone_number(self):
         phone = self.cleaned_data.get('phone_number')
