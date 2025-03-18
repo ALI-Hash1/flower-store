@@ -38,6 +38,10 @@ class LoginView(AnonymousRequiredMixin, View):
     form = LoginForm
     template_name = 'accounts/login.html'
 
+    def setup(self, request, *args, **kwargs):
+        self.next = request.GET.get('next')
+        return super().setup(request, *args, **kwargs)
+
     def get(self, request):
         return render(request, self.template_name, {'form': self.form})
 
@@ -48,13 +52,15 @@ class LoginView(AnonymousRequiredMixin, View):
             user = authenticate(request, phone_number=cd['phone_number'], password=cd['password'])
             if user:
                 login(request, user)
+                if self.next:
+                    return redirect(self.next)
                 messages.success(request, 'شما با موفقیت وارد شدید', 'success')
                 return redirect('home:home_page')
             messages.error(request, 'شماره تلفن یا رمزعبور اشتباه است', 'danger')
         return render(request, self.template_name, {'form': form})
 
 
-class LogoutView(View):
+class LogoutView(LoginRequiredMixin, View):
     def get(self, request):
         logout(request)
         messages.success(request, 'شما با موفقیت خارج شدید', 'success')
