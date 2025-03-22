@@ -1,5 +1,6 @@
 from kavenegar import *
 from django.shortcuts import redirect
+from django.db import models
 
 
 def send_otp_code(phone_number, code):
@@ -15,3 +16,11 @@ class AnonymousRequiredMixin:
         if request.user.is_authenticated:
             return redirect(self.redirect_url)
         return super().dispatch(request, *args, **kwargs)
+
+
+class SEOMixin(models.Model):
+    keyword = models.CharField(max_length=100, blank=True, null=True)
+    meta_description = models.CharField(max_length=300, blank=True, null=True)
+
+    class Meta:
+        abstract = True

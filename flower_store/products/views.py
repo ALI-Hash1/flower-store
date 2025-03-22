@@ -1,4 +1,5 @@
 import requests
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
 from .models import Product, Comment
@@ -36,7 +37,7 @@ class ProductDetailView(View):
                       context={'product': self.product, 'comments': self.comments, 'form': self.form_class})
 
 
-class ProductReplyCommentView(View):
+class ProductReplyCommentView(LoginRequiredMixin, View):
     def post(self, request, product_id, comment_id):
         form_class = CommentCreateForm
         product = get_object_or_404(Product, id=product_id)
