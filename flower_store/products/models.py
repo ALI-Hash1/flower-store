@@ -1,9 +1,10 @@
 from django.db import models
 from accounts.models import User
 from django.core.validators import MaxValueValidator
+from utils import SEOMixin
 
 
-class Product(models.Model):
+class Product(SEOMixin, models.Model):
     category = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='products')
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
@@ -29,7 +30,7 @@ class Product(models.Model):
         return self.name
 
 
-class Category(models.Model):
+class Category(SEOMixin, models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True)
 

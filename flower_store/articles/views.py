@@ -1,3 +1,10 @@
 from django.shortcuts import render
+from django.views import View
 
-# Create your views here.
+
+class ArticleView(View):
+    def get(self, request, slug_article):
+        pass
+
+    def post(self, request, slug_article):
+        pass

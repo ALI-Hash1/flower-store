@@ -3,15 +3,17 @@ import pytz
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, redirect
 from django.views import View
-from .forms import RegisterForm, LoginForm, VerifyCodeForm
+from .forms import RegisterForm, LoginForm, VerifyCodeForm, ChangeEmailForm
 from .models import User, OtpCode
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from utils import send_otp_code, AnonymousRequiredMixin
 from random import randint
 from django.shortcuts import get_object_or_404
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 
 
 class RegisterView(AnonymousRequiredMixin, View):
@@ -98,13 +100,31 @@ class RegisterVerifyCodeView(View):
 
 
 class ProfileView(UserPassesTestMixin, View):
+    def setup(self, request, *args, **kwargs):
+        self.user = get_object_or_404(User, id=kwargs['user_id'])
+        self.password_form = PasswordChangeForm(user=self.user)
+        return super().setup(request, *args, **kwargs)
+
     def test_func(self):
         user_id = self.kwargs.get('user_id')
         return self.request.user.is_authenticated and self.request.user.id == user_id
 
     def get(self, request, user_id):
-        user = get_object_or_404(User, id=user_id)
-        return render(request, 'accounts/profile.html', context={'user': user})
+        email_form = ChangeEmailForm
+        return render(request, 'accounts/profile.html',
+                      context={'user': self.user, 'form': self.password_form, 'email_form': email_form})
+
+    def post(self, request, user_id):
+        form = ChangeEmailForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            self.user.email = cd['email']
+            self.user.save()
+            messages.success(request, 'email successfully saved', 'success')
+            return redirect(reverse('accounts:user_profile', args=(self.user.id,)))
+        messages.error(request, 'email is invalid, try again...', 'danger')
+        return render(request, 'accounts/profile.html',
+                      context={'user': self.user, 'form': self.password_form, 'email_form': form})
 
 
 class PasswordResetView(auth_views.PasswordResetView):
@@ -125,3 +145,15 @@ class PasswordResetConfirmView(auth_views.PasswordResetConfirmView):
         response = super().form_valid(form)
         messages.success(self.request, 'رمز عبور شما با موفقیت تغییر پیدا کرد.')
         return response
+
+
+class PasswordChangeView(LoginRequiredMixin, View):
+    def post(self, request):
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            messages.success(request, 'رمز عبور شما با موفقیت تغییر یافت.')
+            return redirect(reverse('accounts:user_profile', args=(request.user.id,)))
+        messages.error(request, 'لطفاً اطلاعات صحیح وارد کنید.')
+        return render(request, 'accounts/profile.html', context={'user': request.user, 'form': form})

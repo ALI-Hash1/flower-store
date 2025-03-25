@@ -2,7 +2,25 @@
 
 {% block content %}
 
-    <h2 class="text-center"> {{user.phone_number}} </h2>
+    <h2 class="text-center"> {{user.phone_number}} </h2></br>
 
+    {% if request.user.email %}
+        <h5> your email is equal to: {{request.user.email}} </h5>
+    {% else %}
+        <form action="" method="post">
+            {% csrf_token %}
+            {{email_form.as_p}}
+            <input type="submit" value="send">
+        </form>
+    {% endif %}
+
+
+    <h3> change password </h3></br>
+
+    <form action="{% url 'accounts:user_change_password' %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">تغییر رمز عبور</button>
+    </form>
 
 {% endblock %}

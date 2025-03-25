@@ -4,9 +4,6 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 from .models import User
 
-from .models import User
-from django.core.exceptions import ValidationError
-
 
 class UserCreationForm(forms.ModelForm):
     password1 = forms.CharField(label="password", widget=forms.PasswordInput)
@@ -77,3 +74,7 @@ class LoginForm(forms.Form):
 
 class VerifyCodeForm(forms.Form):
     code = forms.IntegerField()
+
+
+class ChangeEmailForm(forms.Form):
+    email = forms.EmailField()
