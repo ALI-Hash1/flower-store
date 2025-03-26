@@ -2,6 +2,7 @@ from django.db import models
 from accounts.models import User
 from django.core.validators import MaxValueValidator
 from utils import SEOMixin
+from articles.models import Article
 
 
 class Product(SEOMixin, models.Model):
@@ -44,16 +45,23 @@ class Category(SEOMixin, models.Model):
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_comments')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_comments')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_comments', blank=True,
+                                null=True)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='article_comments', blank=True,
+                                null=True)
     reply = models.ForeignKey('Comment', on_delete=models.CASCADE, related_name='answers_comment', blank=True,
                               null=True)
     is_reply = models.BooleanField(default=False)
     author_name = models.CharField(max_length=255)
     comment_text = models.TextField()
     created = models.DateField(auto_now_add=True)
+    admin_confirmation = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'Review by {self.user.email} for {self.product.name}'
+        if self.product:
+            return f'Review by {self.user.phone_number} for {self.product.name}'
+        elif self.article:
+            return f'Review by {self.user.phone_number} for {self.article.title}'
 
 
 class DiscountCode(models.Model):

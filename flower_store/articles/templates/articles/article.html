@@ -2,5 +2,36 @@
 
 {% block content %}
 
+    <h1>{{article.title}}</h1><br>
+    <p> {{article.content}} </p>
+
+    {% if request.user.is_authenticated %}
+        <form action="" method="post">
+            {% csrf_token %}
+            {{form.as_p}}
+            <input type="submit" value="Send">
+        </form>
+    {% else %}
+        <p class="alert alert-danger"> Only logged in users can comment</p>
+    {% endif %}
+    <br><hr><br>
+    {% for comment in comments %}
+        <h4>{{comment.author_name}}</h4>
+        <p> {{comment.comment_text}} </p>
+        <br>
+        {% if request.user.is_authenticated %}
+            <form action="{% url 'articles:reply_comments' article.id comment.id %}" method="post">
+                {% csrf_token %}
+                {{form.as_p}}
+                <input type="submit" value="Send">
+            </form>
+        {% endif %}
+        {% with replies=comment.answers_comment.all %}
+            {% for reply in replies %}
+                <p class="bg-primary p-3 m-2"> {{reply.user}} <br>{{reply.comment_text}}</p>
+            {% endfor %}
+        {% endwith %}
+        <br><br>
+    {% endfor %}
 
 {% endblock %}
