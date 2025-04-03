@@ -1,7 +1,7 @@
 from products.models import Product
 
-
 CART_SESSION_ID = 'cart'
+
 
 class Cart:
     def __init__(self, request):
@@ -17,7 +17,6 @@ class Cart:
             self.cart[product_id] = {'quantity': 0, 'price': product.price}
         self.cart[product_id]['quantity'] += quantity
         self._update_session()
-
 
     def __iter__(self):
         product_ids = self.cart.keys()
@@ -43,3 +42,6 @@ class Cart:
             del self.cart[product_id]
             self._update_session()
 
+    def clear(self):
+        del self.session[CART_SESSION_ID]
+        self.session.modified = True

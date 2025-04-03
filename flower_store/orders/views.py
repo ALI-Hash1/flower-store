@@ -9,6 +9,7 @@ from .cart import Cart
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from products.forms import CommentCreateForm
+from .models import Order, OrderItem
 
 
 class CartView(LoginRequiredMixin, View):
@@ -39,3 +40,19 @@ class CartRemoveView(LoginRequiredMixin, View):
         cart = Cart(request)
         cart.remove(product_id)
         return redirect('orders:cart')
+
+
+class CreateOrderView(LoginRequiredMixin, View):
+    def get(self, request):
+        cart = Cart(request)
+        order = Order.objects.create(user=request.user)
+        for item in cart:
+            OrderItem.objects.create(product=item['product'], order=order, quantity=item['quantity'])
+        cart.clear()
+        return redirect('orders:order_detail', order.id)
+
+
+class OrderDetailView(LoginRequiredMixin, View):
+    def get(self, request, order_id):
+        order = get_object_or_404(Order, id=order_id)
+        return render(request, 'orders/order.html', {'order': order})
