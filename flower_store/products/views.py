@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.shortcuts import reverse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from orders.forms import CartAddForm
 
 
 class ProductDetailView(View):
@@ -20,8 +21,10 @@ class ProductDetailView(View):
         return super().setup(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
+        purchase_form = CartAddForm
         return render(request, 'products/product.html',
-                      context={'product': self.product, 'comments': self.comments, 'form': self.form_class})
+                      context={'product': self.product, 'comments': self.comments, 'form': self.form_class,
+                               'purchase_form': purchase_form})
 
     @method_decorator(login_required)
     def post(self, request, slug_product):
