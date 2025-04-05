@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    {% for order in orders %}
+        <hr><br><br>
+        paid situation: {{order.paid}}<br>
+        total price: {{order.get_total_price}}<br>
+        <br>
+        {% for item in order.items.all %}
+            <hr><br>products:<br>
+            name: {{item.product.name}}
+            <br>
+            quantity: {{item.quantity}}
+        {% endfor %}
+        <br><hr><br>
+        <a href="{% url 'orders:order_pay' order.id %}" class="btn btn-success"> Pay Order </a>
+    {% endfor %}
+
+
+{% endblock content %}

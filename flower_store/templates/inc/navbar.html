@@ -6,6 +6,7 @@
                 <a class="nav-link active" href="{% url 'accounts:user_logout' %}">logout</a>
                 <a class="nav-link active" href="{% url 'accounts:user_profile' request.user.id %}">profile</a>
                 <a class="nav-link active" href="{% url 'orders:cart' %}">cart</a>
+                <a class="nav-link active" href="{% url 'orders:order_list' %}">orders</a>
             {% else %}
                 <a class="nav-link active" href="{% url 'accounts:user_register' %}">register</a>
                 <a class="nav-link active" href="{% url 'accounts:user_login' %}">login</a>

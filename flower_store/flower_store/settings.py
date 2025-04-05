@@ -149,3 +149,7 @@ EMAIL_PORT = 587
 EMAIL_HOST_PASSWORD = 'rbivllbeyyfaczrc'
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'flower store website'
+
+# zarinpal config
+MERCHANT = "b435e68f-6d8c-4e6b-8d51-0afd1fcbda6f"
+SANDBOX = False

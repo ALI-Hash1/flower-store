@@ -1,5 +1,5 @@
 from pyexpat.errors import messages
-
+from django.conf import settings
 from django.shortcuts import render, redirect
 from django.views import View
 from django.shortcuts import get_object_or_404
@@ -10,6 +10,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from products.forms import CommentCreateForm
 from .models import Order, OrderItem
+from django.http import HttpResponse, JsonResponse
+import json
+import requests
 
 
 class CartView(LoginRequiredMixin, View):
@@ -56,3 +59,91 @@ class OrderDetailView(LoginRequiredMixin, View):
     def get(self, request, order_id):
         order = get_object_or_404(Order, id=order_id)
         return render(request, 'orders/order.html', {'order': order})
+
+# sandbox merchant
+if settings.SANDBOX:
+    sandbox = 'sandbox'
+else:
+    sandbox = 'www'
+
+ZP_API_REQUEST = f"https://{sandbox}.zarinpal.com/pg/rest/WebGate/PaymentRequest.json"
+ZP_API_VERIFY = f"https://{sandbox}.zarinpal.com/pg/rest/WebGate/PaymentVerification.json"
+ZP_API_STARTPAY = f"https://{sandbox}.zarinpal.com/pg/StartPay/"
+description = "توضیحات مربوط به تراکنش را در این قسمت وارد کنید"  # Required
+CallbackURL = 'http://127.0.0.1:8000/cart/verify/'
+
+class OrderPayView(LoginRequiredMixin, View):
+    def get(self, request, order_id):
+        order = get_object_or_404(Order, id=order_id)
+        request.session['order_id'] = {
+            'order_id': order.id
+        }
+        data = {
+            "MerchantID": settings.MERCHANT,
+            "Amount": order.get_total_price(),
+            "Description": description,
+            "Phone": request.user.phone_number,
+            "CallbackURL": CallbackURL,
+        }
+        data = json.dumps(data)
+        # set content length by data
+        headers = {'content-type': 'application/json', 'content-length': str(len(data))}
+        try:
+            response = requests.post(ZP_API_REQUEST, data=data, headers=headers, timeout=10)
+
+            if response.status_code == 200:
+                response = response.json()
+                if response['Status'] == 100:
+                    # در صورت موفقیت، تغییر مسیر به صفحه پرداخت زرین پال
+                    startpay_url = ZP_API_STARTPAY + str(response['Authority'])
+                    return redirect(startpay_url)
+                else:
+                    return JsonResponse({
+                        'status': False,
+                        'code': str(response.get('Status'))
+                    })
+            return JsonResponse({
+                    'status': False,
+                    'code': response.status_code
+                })
+        except requests.exceptions.Timeout:
+            return JsonResponse({'status': False, 'code': 'timeout'})
+        except requests.exceptions.ConnectionError:
+            return JsonResponse({'status': False, 'code': 'connection error'})
+
+
+class OrderPayVerifyView(LoginRequiredMixin, View):
+    def get(self, request):
+        if request.GET.get('Status') != 'OK':
+            # پرداخت لغو شده؛ کاربر را به صفحه مناسب هدایت یا یک پیام مناسب نمایش دهید.
+            messages.warning(request, 'فرایند پرداخت سفارش لغو شد.', 'danger')
+            return redirect('orders:order_list')
+
+        order = get_object_or_404(Order, id=request.session['order_id']['order_id'])
+        data = {
+            "MerchantID": settings.MERCHANT,
+            "Amount": order.get_total_price(),
+            "Authority": request.GET['Authority'],
+        }
+        data = json.dumps(data)
+        # set content length by data
+        headers = {'content-type': 'application/json', 'content-length': str(len(data))}
+        response = requests.post(ZP_API_VERIFY, data=data, headers=headers)
+
+        if response.status_code == 200:
+            response = response.json()
+            if response['Status'] == 100:
+                # return JsonResponse({'status': True, 'RefID': response['RefID']})
+                order.paid = True
+                order.save()
+                del request.session['order_id']
+                return redirect('home:home_page')
+            else:
+                return JsonResponse({'status': False, 'code': str(response['Status'])})
+        return JsonResponse({'response': response})
+
+
+class OrderView(LoginRequiredMixin, View):
+    def get(self, request):
+        orders = request.user.orders.all()
+        return render(request, 'orders/user-orders.html', context={'orders': orders})
