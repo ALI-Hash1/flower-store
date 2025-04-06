@@ -3,6 +3,7 @@ from django.forms import PasswordInput
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 from .models import User
+from django.contrib import messages
 
 
 class UserCreationForm(forms.ModelForm):
@@ -78,3 +79,43 @@ class VerifyCodeForm(forms.Form):
 
 class ChangeEmailForm(forms.Form):
     email = forms.EmailField()
+
+
+class ChangePhoneForm(forms.Form):
+    phone_number = forms.CharField(max_length=11, min_length=11)
+
+    def clean_phone_number(self):
+        phone = self.cleaned_data.get('phone_number')
+
+        # بررسی شروع شماره با 09
+        if not phone.startswith('09'):
+            raise ValidationError("شماره تلفن باید با 09 شروع شود")
+
+        return phone
+
+
+class PhoneVerifyCodeForm(forms.Form):
+    code = forms.IntegerField()
+
+
+class SetNewPasswordForm(forms.Form):
+    new_password1 = forms.CharField(
+        widget=forms.PasswordInput,
+        label="رمز عبور جدید",
+        min_length=8,
+        help_text="رمز عبور باید حداقل 8 کاراکتر داشته باشد."
+    )
+    new_password2 = forms.CharField(
+        widget=forms.PasswordInput,
+        label="تکرار رمز عبور جدید",
+        min_length=8
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        pwd1 = cleaned_data.get('new_password1')
+        pwd2 = cleaned_data.get('new_password2')
+
+        if pwd1 and pwd2 and pwd1 != pwd2:
+            raise ValidationError("رمزهای عبور وارد شده مطابقت ندارند.")
+        return cleaned_data

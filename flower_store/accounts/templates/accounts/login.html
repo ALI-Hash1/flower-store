@@ -6,4 +6,6 @@
         {{ form.as_p }}
         <input type="submit" value="Login">
     </form>
+    <br><br>
+    <a href="{% url 'accounts:user_reset_password' %}" class="btn btn-success"> foget password</a>
 {% endblock %}
