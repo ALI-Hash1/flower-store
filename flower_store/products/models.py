@@ -62,14 +62,3 @@ class Comment(models.Model):
             return f'Review by {self.user.phone_number} for {self.product.name}'
         elif self.article:
             return f'Review by {self.user.phone_number} for {self.article.title}'
-
-
-class DiscountCode(models.Model):
-    code = models.CharField(max_length=50, unique=True)
-    discount_percentage = models.PositiveSmallIntegerField(MaxValueValidator(100))
-    valid_from = models.DateTimeField()
-    valid_to = models.DateTimeField()
-    active = models.BooleanField(default=True)
-
-    def __str__(self):
-        return self.code

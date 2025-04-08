@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h5> order details </h5>
+    <br><hr>
+    {{order.get_total_price}}
+    <br><br>
+
+    <h6> کد تخفیف: </h6>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input value="اعمال کد تخفیف" type="submit">
+    </form>
+    <br><br>
+    <a href="{% url 'orders:order_pay' order.id %}" class="btn btn-success"> Pay Order </a>
+
+{% endblock content %}

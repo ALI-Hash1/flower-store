@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models import Product, Category, Comment, DiscountCode
+from .models import Product, Category, Comment
 from django.utils.html import format_html
 
-new_models = [Product, Category, DiscountCode]
+new_models = [Product, Category]
 
 for model in new_models:
     admin.site.register(model)
@@ -31,3 +31,5 @@ class ConfirmationStatusFilter(admin.SimpleListFilter):
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_filter = (ConfirmationStatusFilter,)
+
+

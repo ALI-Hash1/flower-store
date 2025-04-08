@@ -6,6 +6,7 @@
         <hr><br><br>
         paid situation: {{order.paid}}<br>
         total price: {{order.get_total_price}}<br>
+
         <br>
         {% for item in order.items.all %}
             <hr><br>products:<br>
@@ -14,7 +15,8 @@
             quantity: {{item.quantity}}
         {% endfor %}
         <br><hr><br>
-        <a href="{% url 'orders:order_pay' order.id %}" class="btn btn-success"> Pay Order </a>
+        <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-success"> order details and pay </a>
+        <a href="{% url 'orders:order_delete' order.id %}" class="btn btn-danger">حذف سفارش</a>
     {% endfor %}
 
 

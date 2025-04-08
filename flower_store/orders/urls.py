@@ -11,4 +11,5 @@ urlpatterns = [
     path('pay/<int:order_id>/', views.OrderPayView.as_view(), name='order_pay'),
     path('verify/', views.OrderPayVerifyView.as_view(), name='order_verify'),
     path('orders/', views.OrderView.as_view(), name='order_list'),
+    path('delete_order/<int:order_id>/', views.OrderDeleteView.as_view(), name='order_delete'),
 ]
