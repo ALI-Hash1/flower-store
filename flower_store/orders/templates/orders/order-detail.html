@@ -1,19 +1,46 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block extra_headers %}
+    <link rel="stylesheet" href="{% static 'orders/css/detail-style.css' %}">
+{% endblock %}
 
 {% block content %}
 
-    <h5> order details </h5>
-    <br><hr>
-    {{order.get_total_price}}
-    <br><br>
+<!--    <h5> order details </h5>-->
+<!--    <br><hr>-->
+<!--    {{order.get_total_price}}-->
+<!--    <br><br>-->
 
-    <h6> کد تخفیف: </h6>
-    <form action="" method="post">
-        {% csrf_token %}
-        {{form.as_p}}
-        <input value="اعمال کد تخفیف" type="submit">
-    </form>
-    <br><br>
-    <a href="{% url 'orders:order_pay' order.id %}" class="btn btn-success"> Pay Order </a>
+<!--    <h6> کد تخفیف: </h6>-->
+<!--    <form action="" method="post">-->
+<!--        {% csrf_token %}-->
+<!--        {{form.as_p}}-->
+<!--        <input value="اعمال کد تخفیف" type="submit">-->
+<!--    </form>-->
+<!--    <br><br>-->
+<!--    <a href="{% url 'orders:order_pay' order.id %}" class="btn btn-success"> Pay Order </a>-->
+
+
+
+    <div class="order-container">
+        <!-- Order Details -->
+        <h5>Order Details</h5>
+        <hr>
+        <div class="total-price">{{order.get_total_price}} تومان</div>
+
+        <!-- Discount Section -->
+        <div class="discount-section">
+            <h6>کد تخفیف:</h6>
+            <form action="" method="post" class="discount-form">
+                {% csrf_token %}
+                {{form.as_p}}
+                <input value="اعمال کد تخفیف" type="submit">
+            </form>
+        </div>
+
+        <!-- Pay Order Button -->
+        <a href="{% url 'orders:order_pay' order.id %}" class="pay-button">تصفیه حساب</a>
+    </div>
 
 {% endblock content %}

@@ -1,9 +1,34 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block extra_headers %}
+    <link rel="stylesheet" href="{% static 'accounts/css/register.css' %}">
+{% endblock %}
 
 {% block content %}
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Send">
-    </form>
+
+    <div class="main-container">
+        <!-- Page Title -->
+        <div class="page-title">ثبت نام کاربر</div>
+
+        <!-- Form Container -->
+        <div class="register-container">
+            <!-- Left side for image -->
+            <div class="register-image">
+                <img src="https://via.placeholder.com/300x400?text=Beautiful+Plant" alt="Beautiful Plant">
+            </div>
+
+            <!-- Right side for form -->
+            <div class="register-form-container">
+                <h2>Create Your Account</h2>
+                <form class="register-form" action="{% url 'accounts:user_register' %}" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Register</button>
+                </form>
+                <p>Already have an account? <a href="{% url 'accounts:user_login' %}">Login here</a></p>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

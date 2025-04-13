@@ -1,25 +1,34 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block extra_headers %}
+    <link rel="stylesheet" href="{% static 'orders/css/style.css' %}">
+{% endblock %}
 
 {% block content %}
 
-    <table class="table table-dark">
-      <tbody>
-        {% for item in cart %}
-            <tr class="table-active">
-              <td scope="col">{{item.product.name}}</td>
-              <td scope="col">{{item.quantity}}</td>
-              <td scope="col">{{item.total_price}}</td>
-              <td> <a href="{% url 'orders:cart_remove' item.product.id %}"> remove </a> </td>
-            </tr>
-        {% endfor %}
-        <tr>
-            <td> total </td>
-            <td colspan="2"></td>
-            <td> {{cart.get_total_price}} </td>
-        </tr>
+    <div class="container">
+        <!-- Cart Items -->
 
-      </tbody>
-    </table>
-    <a href="{% url 'orders:order_create' %}" class="btn btn-success"> checkout </a>
+        {% for item in cart %}
+            <div class="cart-item">
+                <div class="item-info">
+                    <h3>{{item.product.name}}</h3>
+                    <p>Quantity: {{item.quantity}}</p>
+                </div>
+                <div style="margin-right: 10px;" class="item-total ">{{item.total_price}}</div>
+                <a href="{% url 'orders:cart_remove' item.product.id %}" class="btn btn-danger"> Delete </a>
+            </div>
+        {% endfor %}
+
+        <!-- Cart Summary -->
+        <div class="cart-summary">
+            <div class="total-label">Total:</div>
+            <div class="total-price">{{cart.get_total_price}}</div>
+        </div>
+
+        <!-- Checkout Button -->
+        <a href="{% url 'orders:order_create' %}" class="checkout-btn">Checkout</a>
+    </div>
 
 {% endblock %}

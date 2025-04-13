@@ -127,7 +127,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
@@ -153,3 +153,11 @@ DEFAULT_FROM_EMAIL = 'flower store website'
 # zarinpal config
 MERCHANT = "b435e68f-6d8c-4e6b-8d51-0afd1fcbda6f"
 SANDBOX = False
+
+# arvancloud connections
+AWS_S3_ENDPOINT_URL = 'https://s3.ir-thr-at1.arvanstorage.ir'
+AWS_ACCESS_KEY_ID   = '1b378ddc-3ffb-4d19-ad83-6dea9cf09c67'
+AWS_SECRET_ACCESS_KEY   = '3c3a0b3f0ef8ba48a6655de3c8a00b8c8bc9d424bf48fdd7e7fec9033733d62f'
+AWS_SERVICE_NAME  = 's3'
+AWS_STORAGE_BUCKET_NAME = 'flower-store'
+AWS_LOCAL_STORAGE = f'{BASE_DIR}/aws/'

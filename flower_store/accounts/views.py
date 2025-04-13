@@ -205,7 +205,11 @@ class PasswordResetPhoneDoneView(View):
         form = self.form(request.POST)
         if form.is_valid():
             user_session = request.session['user_reset_phone']
-            code_instance = OtpCode.objects.get(phone_number=user_session['phone_number'])
+            try:
+                code_instance = OtpCode.objects.get(phone_number=user_session['phone_number'])
+            except OtpCode.DoesNotExist:
+                messages.error(request, "این کد اشتباه است, دوباره تلاش کنید...", "danger")
+                return redirect('accounts:user_reset_password_phone')
             cd = form.cleaned_data
             if cd['code'] == code_instance.code:
                 if datetime.datetime.now(tz=pytz.timezone('Asia/Tehran')) <= code_instance.created + datetime.timedelta(
@@ -214,16 +218,10 @@ class PasswordResetPhoneDoneView(View):
                     messages.success(request, 'رمز عبور خود را تغییر دهید...', 'success')
                     return redirect('accounts:user-reset-password-function')
                 else:
-                    messages.error(request, 'کد ارسالی منقضی شده است, لطفا دوباره تلاش کنید...')
-                    exist_code = OtpCode.objects.get(phone_number=request.session['user_reset_phone'])
-                    if exist_code:
-                        exist_code.delete()
+                    messages.error(request, 'کد ارسالی منقضی شده است, لطفا دوباره تلاش کنید...', "danger")
                     del request.session['user_reset_phone']
                     return redirect('accounts:user_reset_password_phone')
             else:
-                exist_code = OtpCode.objects.get(phone_number=request.session['user_reset_phone'])
-                if exist_code:
-                    exist_code.delete()
                 del request.session['user_reset_phone']
                 messages.error(request, 'کد ارسالی شما اشتباه بود, دوباره تلاش کنید...', 'danger')
                 return redirect('accounts:user_reset_password_phone')
@@ -234,10 +232,9 @@ class PasswordResetFunctionView(View):
     form = SetNewPasswordForm
     template = 'accounts/phone-change-password.html'
 
-
     def get(self, request):
         if not request.session.get('key'):
-            messages.error(request, "دسترسی غیرمجاز. لطفاً ابتدا درخواست ریست رمز عبور را انجام دهید.")
+            messages.error(request, "دسترسی غیرمجاز. لطفاً ابتدا درخواست ریست رمز عبور را انجام دهید")
             return redirect('accounts:user_reset_password_phone')
         return render(request, self.template, {'form': self.form})
 
@@ -249,10 +246,9 @@ class PasswordResetFunctionView(View):
             user = User.objects.get(phone_number=user_session['phone_number'])
             user.set_password(cd['new_password1'])
             user.save()
-            messages.success(self.request, "رمز عبور شما با موفقیت تغییر یافت. لطفاً با رمز عبور جدید وارد شوید.")
-            exist_code = OtpCode.objects.get(phone_number=request.session['user_reset_phone'])
-            if exist_code:
-                exist_code.delete()
-            del request.session['user_reset_phone']; del request.session['key']
+            messages.success(self.request, "رمز عبور شما با موفقیت تغییر یافت. لطفاً با رمز عبور جدید وارد شوید.",
+                             "success")
+            del request.session['user_reset_phone']
+            del request.session['key']
             return redirect('accounts:user_login')
         return render(request, self.template, {'form': form})

@@ -1,5 +1,51 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block extra_headers %}
+    <link rel="stylesheet" href="{% static 'home/css/home.css' %}">
+{% endblock %}
 
 {% block content %}
-    <h2>Home Page</h2>
-{% endblock %}
+
+    <div class="hero">
+        <h2>Welcome to Plant Store</h2>
+        <p>Your one-stop shop for all things green!</p>
+    </div>
+
+    <div class="sections">
+        <div class="section">
+            <h3>Indoor Plants</h3>
+            <p>Discover our collection of beautiful indoor plants.</p>
+        </div>
+        <div class="section">
+            <h3>Outdoor Plants</h3>
+            <p>Find the perfect plants for your garden.</p>
+        </div>
+        <div class="section">
+            <h3>Accessories</h3>
+            <p>Shop pots, tools, and more.</p>
+        </div>
+    </div>
+
+    <!-- Carousel Section -->
+    <div class="carousel">
+        <div class="carousel-images" id="carouselImages">
+            <img src="https://via.placeholder.com/800x400?text=Plant+1" alt="Plant 1">
+            <img src="https://via.placeholder.com/800x400?text=Plant+2" alt="Plant 2">
+            <img src="https://via.placeholder.com/800x400?text=Plant+3" alt="Plant 3">
+        </div>
+    </div>
+    <div class="carousel-controls">
+        <button onclick="prevSlide()">Previous</button>
+        <button onclick="nextSlide()">Next</button>
+    </div>
+
+    <!-- Animated Text Section -->
+    <div class="animated-text">
+        Brighten Your Day with Our Beautiful Plants!
+    </div>
+
+    <br><br><br><br><br><br><br><br><br><br><br><br>
+
+{% endblock content %}
+
