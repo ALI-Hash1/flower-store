@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 
     # third-party apps
     'django_celery_beat',
+    'ckeditor',
 ]
 
 MIDDLEWARE = [
@@ -161,3 +162,18 @@ AWS_SECRET_ACCESS_KEY   = '3c3a0b3f0ef8ba48a6655de3c8a00b8c8bc9d424bf48fdd7e7fec
 AWS_SERVICE_NAME  = 's3'
 AWS_STORAGE_BUCKET_NAME = 'flower-store'
 AWS_LOCAL_STORAGE = f'{BASE_DIR}/aws/'
+
+
+# تنظیمات CKEditor
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': '100%',
+    },
+}
+
+SILENCED_SYSTEM_CHECKS = [
+    "ckeditor.W001",
+]
+

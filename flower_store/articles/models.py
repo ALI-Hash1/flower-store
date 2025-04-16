@@ -3,6 +3,7 @@ from django.db import models
 from accounts.models import User
 from django.utils.text import slugify
 from utils import SEOMixin
+from ckeditor.fields import RichTextField
 
 
 class Article(SEOMixin, models.Model):
@@ -11,7 +12,7 @@ class Article(SEOMixin, models.Model):
     tags = models.ManyToManyField('Tag', blank=True, verbose_name="تگ ‌ها")
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique=True)
-    content = models.TextField()
+    content = RichTextField()
     publish_date = models.DateTimeField(default=timezone.now)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
