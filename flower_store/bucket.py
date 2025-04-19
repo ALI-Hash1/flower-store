@@ -53,7 +53,7 @@ class Bucket:
             Bucket=settings.AWS_STORAGE_BUCKET_NAME,
             Key=key,
             Body=file_data,
-            ContentType=content_type
+            ContentType=content_type,
         )
         return True
 

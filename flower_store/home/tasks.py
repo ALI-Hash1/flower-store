@@ -20,4 +20,4 @@ def download_object_task(key):
 
 @shared_task
 def upload_object_task(file, key):
-    bucket.upload_object(key, file)
+    return bucket.upload_object(file, key)

@@ -22,7 +22,7 @@ class Article(SEOMixin, models.Model):
         ('published', 'منتشر شده'),
     ]
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
-    thumbnail = models.ImageField(upload_to='articles-thumbnails/', blank=True, null=True)
+    thumbnail = models.ImageField(blank=True, null=True)
     views = models.PositiveIntegerField(default=0)
     allow_comments = models.BooleanField(default=True)
 

@@ -138,9 +138,6 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# MEDIA FILE CONFIG
-MEDIA_URL = '/media-files/'
-MEDIA_ROOT = BASE_DIR / 'media-files'
 
 # connecting google free email service
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -162,6 +159,12 @@ AWS_SECRET_ACCESS_KEY   = '3c3a0b3f0ef8ba48a6655de3c8a00b8c8bc9d424bf48fdd7e7fec
 AWS_SERVICE_NAME  = 's3'
 AWS_STORAGE_BUCKET_NAME = 'flower-store'
 AWS_LOCAL_STORAGE = f'{BASE_DIR}/aws/'
+
+
+# MEDIA FILE CONFIG
+# MEDIA_URL = '/media-files/'
+MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/"
+MEDIA_ROOT = BASE_DIR / 'media-files'
 
 
 # تنظیمات CKEditor
