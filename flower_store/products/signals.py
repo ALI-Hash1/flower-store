@@ -11,9 +11,9 @@ def upload_product_image(sender, instance, created, **kwargs):
     if instance.image:
         if not created:
             key = instance.image.name
-            instance.address_image = f"{settings.AWS_S3_ENDPOINT_URL}/{settings.AWS_STORAGE_BUCKET_NAME}/{key}"
-            if instance.old_image and instance.old_image != instance.address_image:
-                delete_object_task(key)
+            if instance.old_image != key:
+                delete_key = instance.old_image
+                delete_object_task(str(delete_key))
 
         image_name = instance.image.path
         key = f'{instance.image.name}'
@@ -23,7 +23,7 @@ def upload_product_image(sender, instance, created, **kwargs):
             instance.image = f"{settings.AWS_S3_ENDPOINT_URL}/{settings.AWS_STORAGE_BUCKET_NAME}/{key}"
 
 
-
 @receiver(pre_save, sender=Product)
 def handle_product_image_change(sender, instance, **kwargs):
-    instance.old_image = instance.image
+    if instance.id in [p.id for p in Product.objects.all()]:
+        instance.old_image = Product.objects.get(id=instance.id).image
