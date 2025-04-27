@@ -2,13 +2,18 @@ from django.shortcuts import render, redirect
 from django.views import View
 from . import tasks
 from django.contrib import messages
+from products.models import Product
+from articles.models import Article
 
 
 class HomeView(View):
     template_name = 'home/home.html'
 
     def get(self, request):
-        return render(request, self.template_name)
+        product1, product2, product3 = Product.objects.all()[:3]
+        articles = Article.objects.all()[:3]
+        return render(request, self.template_name,
+                      context={'product1': product1, 'product2': product2, 'product3': product3, 'articles': articles})
 
 
 class BucketView(View):

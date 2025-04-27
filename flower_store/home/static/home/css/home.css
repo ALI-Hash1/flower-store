@@ -1,36 +1,16 @@
-.hero {
-    text-align: center;
-    padding: 4rem 2rem;
-    background-color: var(--green-light);
-}
-
-.hero h2 {
-    color: var(--green-dark);
-}
-
-.hero p {
-    color: var(--green-medium);
-}
-
-.sections {
-    display: flex;
-    justify-content: space-around;
-    padding: 2rem;
-    flex-wrap: wrap;
-}
-
-.section {
+/* Base Styles Of Page */
+body {
+    font-family: Arial, sans-serif;
     background-color: var(--white);
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 30%;
-    text-align: center;
-    margin-bottom: 1rem;
+    color: var(--green-dark);
+    display: flex; /* Enables flexbox layout */
+    flex-direction: column; /* Ensures content flows vertically */
+    min-height: 100vh; /* Full height of the viewport */
+    margin: 0; /* Remove default margin */
 }
 
-.section h3 {
-    color: var(--green-dark);
+main {
+    flex: 1; /* Ensures main content takes available space */
 }
 
 /* Carousel styling */
@@ -89,4 +69,172 @@
     100% {
         transform: translateX(0);
     }
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 8px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    padding: 1rem;
+    background-color: var(--white);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary {
+    background-color: var(--green-medium);
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: var(--green-light);
+}
+
+/* Animated Background */
+.animated-bg {
+    position: relative;
+    background: linear-gradient(45deg, var(--green-dark), var(--red-dark));
+    color: var(--cream);
+    text-align: center;
+    padding: 3rem;
+    margin: 2rem 0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.animated-bg::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.2), transparent);
+    transform: rotate(45deg);
+    animation: move-bg 5s linear infinite;
+    z-index: 1;
+}
+
+@keyframes move-bg {
+    0% {
+        transform: translate(-50%, -50%) rotate(45deg);
+}
+    100% {
+        transform: translate(-50%, -50%) rotate(405deg);
+}
+}
+
+.animated-bg h2 {
+    position: relative;
+    z-index: 2;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+/* Window */
+.window {
+    border: none;
+    border-radius: 8px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    padding: 1rem; /* Padding added */
+}
+
+.window:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* H2 */
+h2 {
+    color: white; /* رنگ متن سفید */
+}
+
+/* Articles Carousel */
+.carousel-inner img {
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.carousel-inner a:hover img {
+    transform: scale(1.05); /* Zoom-in effect */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Soft shadow */
+}
+
+.carousel-caption {
+    background-color: rgba(56, 102, 65, 0.8);
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+/* Testimonial Carousel */
+.reviews-card {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 800px;
+    background-color: var(--white);
+    margin: auto; /* Centers the card horizontally */
+}
+
+.review-row {
+    display: flex;
+    align-items: center;
+    padding: 2rem;
+    min-height: 250px;
+}
+
+.review-row:nth-child(odd) {
+    background-color: var(--red-dark);
+    color: var(--white);
+}
+
+.review-row:nth-child(even) {
+    background-color: var(--white);
+    color: var(--green-dark);
+}
+
+.review-photo {
+    flex: 1;
+    max-width: 25%;
+    text-align: center;
+}
+
+.review-photo img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 3px solid var(--green-light);
+}
+
+.review-text {
+    flex: 3;
+    padding: 1rem;
+    font-size: 1.2rem;
+}
+
+.review-row:nth-child(odd) .review-text::before {
+    content: '“';
+    font-size: 3rem;
+    color: var(--green-light);
+    margin-right: 0.5rem;
+}
+
+.review-row:nth-child(even) .review-text::before {
+    content: '“';
+    font-size: 3rem;
+    color: var(--red-dark);
+    margin-right: 0.5rem;
+}
+
+.review-row:nth-child(odd) .review-photo img {
+    border-color: var(--white);
 }

@@ -10,7 +10,6 @@ class Product(SEOMixin, models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     available = models.BooleanField(default=True)
-    # image = models.ImageField(upload_to='product-images/')
     image = models.ImageField()
     price = models.PositiveIntegerField()
     slug = models.SlugField(max_length=255, unique=True)
