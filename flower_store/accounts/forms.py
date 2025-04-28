@@ -43,9 +43,21 @@ class UserChangeForm(forms.ModelForm):
 
 
 class RegisterForm(forms.Form):
-    phone_number = forms.CharField(max_length=11, min_length=11)
-    password1 = forms.CharField(widget=forms.PasswordInput, label='Password')
-    password2 = forms.CharField(widget=forms.PasswordInput, label='Confirm Password')
+    phone_number = forms.CharField(max_length=11, min_length=11, widget=forms.TextInput(attrs={
+        'class': 'form-control',  # Bootstrap class for styling
+        'placeholder': 'Enter your phone number',
+        'style': 'font-size: 1.2rem;',  # Larger font size
+    }))
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={
+        'class': 'form-control',  # Bootstrap class for styling
+        'placeholder': 'Enter your password',
+        'style': 'font-size: 1.2rem;',  # Larger font size
+    }), label='Password')
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs={
+        'class': 'form-control',  # Bootstrap class for styling
+        'placeholder': 'Confirm your password',
+        'style': 'font-size: 1.2rem;',  # Larger font size
+    }), label='Confirm Password')
 
     def clean(self):
         cd = super().clean()

@@ -1,0 +1,78 @@
+.register-card {
+    display: flex;
+    flex-direction: row;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: var(--white);
+    width: 100%;
+    max-width: 900px;
+}
+
+.register-card-wrapper {
+    display: flex; /* Enables Flexbox layout */
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically */
+    min-height: 100vh; /* Ensures full height of the viewport */
+    padding: 2rem; /* Adds space around the card */
+    background-color: #f8f9fa; /* Optional: Light background color */
+}
+
+.register-card .form-image {
+    flex: 1;
+    background: url('https://s3.ir-thr-at1.arvanstorage.ir/flower-store/register-flower.png') no-repeat center center;
+    background-size: cover;
+    min-width: 150px;
+}
+
+.register-card .form-content {
+    flex: 2;
+    padding: 3rem;
+}
+
+.form-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    color: var(--red-dark);
+}
+
+.form-control {
+    border: 2px solid var(--green-medium);
+    border-radius: 5px;
+    font-size: 1.2rem;
+    padding: 0.75rem;
+}
+
+.form-control:focus {
+    border-color: var(--green-dark);
+    box-shadow: 0 0 5px rgba(56, 102, 65, 0.5);
+}
+
+.btn-primary {
+    background-color: var(--green-medium);
+    border: none;
+    font-size: 1.2rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+}
+
+.btn-primary:hover {
+    background-color: var(--green-dark);
+}
+
+.form-footer {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.form-footer a {
+    color: var(--red-dark);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.form-footer a:hover {
+    text-decoration: underline;
+}

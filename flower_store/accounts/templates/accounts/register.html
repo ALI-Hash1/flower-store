@@ -2,31 +2,30 @@
 {% load static %}
 
 {% block extra_headers %}
-    <link rel="stylesheet" href="{% static 'accounts/css/register.css' %}">
+    <link rel="stylesheet" href="{% static 'accounts/css/register-styles.css' %}">
 {% endblock %}
 
 {% block content %}
 
-    <div class="main-container">
-        <!-- Page Title -->
-        <div class="page-title">ثبت نام کاربر</div>
+    <div class="register-card-wrapper">
+        <div class="register-card" style="text-align: center;" >
+            <!-- Left Image Section -->
+            <div class="form-image"></div>
 
-        <!-- Form Container -->
-        <div class="register-container">
-            <!-- Left side for image -->
-            <div class="register-image">
-                <img src="https://via.placeholder.com/300x400?text=Beautiful+Plant" alt="Beautiful Plant">
-            </div>
-
-            <!-- Right side for form -->
-            <div class="register-form-container">
-                <h2>Create Your Account</h2>
-                <form class="register-form" action="{% url 'accounts:user_register' %}" method="post">
+            <!-- Form Section -->
+            <div class="form-content">
+                <h2 class="form-title">Create Your Account</h2>
+                <form action="{% url 'accounts:user_register' %}" method="post">
                     {% csrf_token %}
                     {{ form.as_p }}
-                    <button type="submit">Register</button>
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary w-100">Register</button>
                 </form>
-                <p>Already have an account? <a href="{% url 'accounts:user_login' %}">Login here</a></p>
+
+                <!-- Footer -->
+                <div class="form-footer">
+                    Already have an account? <a href="{% url 'accounts:user_login' %}">Login</a>
+                </div>
             </div>
         </div>
     </div>
