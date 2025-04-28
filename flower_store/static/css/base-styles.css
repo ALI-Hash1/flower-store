@@ -52,3 +52,68 @@ footer {
 .social-icons a:hover {
     color: var(--green-light);
 }
+
+/* Flash Messages */
+.flash-messages {
+    position: fixed;
+    top: 20px; /* Space from top of the page */
+    left: 20px; /* Space from left of the page */
+    z-index: 1050; /* Ensures it appears above other elements */
+    width: 300px; /* Fixed width for the message box */
+}
+
+.flash-message {
+    display: flex;
+    align-items: center;
+    background-color: #bc4749; /* Red background for the message box */
+    color: #ffffff; /* White text for better readability */
+    border-radius: 10px; /* Rounded corners */
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds shadow for depth */
+    font-size: 1rem;
+    font-weight: bold;
+    position: relative; /* For positioning close button */
+}
+
+.flash-message .icon {
+    font-size: 1.5rem; /* Larger icon size */
+    margin-right: 1rem;
+}
+
+.flash-message .message-text {
+    flex: 1; /* Takes available space */
+}
+
+.flash-message .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+    color: #ffffff; /* White close button */
+    cursor: pointer;
+}
+
+.flash-message.success {
+    background-color: #6a994e; /* Green for success */
+}
+
+.flash-message.error {
+    background-color: #bc4749; /* Red for error */
+}
+
+.flash-message.warning {
+    background-color: #ffcc00; /* Yellow for warning */
+    color: #856404;
+}
+
+.flash-message.info {
+    background-color: #17a2b8; /* Blue for info */
+}
+
+@media (max-width: 768px) {
+    .flash-messages {
+        width: 90%; /* Adjust width for smaller screens */
+        left: 5%; /* Centered horizontally */
+    }
+}
