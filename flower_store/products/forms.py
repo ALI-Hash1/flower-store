@@ -6,4 +6,21 @@ class CommentCreateForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ('author_name', 'comment_text')
-        widgets = {'body': forms.Textarea(attrs={'class': 'form-control'})}
+        labels = {
+            'comment_text': '', 'author_name': ''
+        }
+        widgets = {
+            'comment_text': forms.Textarea(
+                attrs={
+                    'class': 'form-control',
+                    'rows': '3',
+                    'placeholder': 'Write your comment here...'
+                }
+            ),
+            'author_name': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Write your name...'
+                }
+            ),
+        }

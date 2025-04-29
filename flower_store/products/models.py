@@ -57,6 +57,7 @@ class Comment(models.Model):
     created = models.DateField(auto_now_add=True)
     admin_confirmation = models.BooleanField(default=False)
 
+
     def __str__(self):
         if self.product:
             return f'Review by {self.user.phone_number} for {self.product.name}'

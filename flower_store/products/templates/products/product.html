@@ -1,11 +1,68 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block extra_headers %}
+    <link rel="stylesheet" href="{% static 'products/css/product-styles.css' %}">
+    <style>
+        .product-image {
+            background: url('{{host_name}}{{product.image}}') no-repeat center center / cover;
+        }
+    </style>
+{% endblock %}
 
 {% block content %}
 
     <h2>{{product.name}}</h2>
     <p> {{product.description}} </p>
 
+    {% if request.user.is_authenticated %}<h2>{{product.name}}</h2>
+    <p> {{product.description}} </p>
+
     {% if request.user.is_authenticated %}
+        <br><hr>
+        <form action="{% url 'orders:cart_add' product.id %}" method="post">
+            {% csrf_token %}
+            {{purchase_form.as_p}}
+            <input type="submit" value="add to cart">
+        </form>
+
+    {% endif %}
+
+< i-- > oooooooooooooooooooooooo < -- >
+
+    {% if request.user.is_authenticated %}
+        <br><hr>
+        <form action="" method="post">
+            {% csrf_token %}
+            {{form.as_p}}
+            <input type="submit" value="Send">
+        </form>
+    {% else %}
+        <p class="alert alert-danger"> Only logged in users can comment</p>
+    {% endif %}
+    <br><hr><br>
+    {% for comment in comments %}
+        {% if comment.admin_confirmation %}
+            <h4>{{comment.author_name}}</h4>
+            <p> {{comment.comment_text}} </p>
+            <br>
+            {% if request.user.is_authenticated %}
+                <form action="{% url 'products:reply_comments' product.id comment.id %}" method="post">
+                    {% csrf_token %}
+                    {{form.as_p}}
+                    <input type="submit" value="Send">
+                </form>
+            {% endif %}
+            {% with replies=comment.answers_comment.all %}
+                {% for reply in replies %}
+                    {% if reply.admin_confirmation %}
+                        <p class="bg-primary p-3 m-2"> {{reply.user}} <br>{{reply.comment_text}}</p>
+                    {% endif %}
+                {% endfor %}
+            {% endwith %}
+            <br><br>
+        {% endif %}
+    {% endfor %}
         <br><hr>
         <form action="{% url 'orders:cart_add' product.id %}" method="post">
             {% csrf_token %}
@@ -48,5 +105,110 @@
             <br><br>
         {% endif %}
     {% endfor %}
+
+
+
+
+
+
+
+
+    <div class="product-card">
+        <!-- Left: Product Image -->
+        <div class="product-image"></div>
+
+        <!-- Right: Product Details -->
+        <div class="product-details">
+            <h1 class="product-name">{{product.name}}</h1>
+            <p class="product-price">{{product.price}}$</p>
+            <p class="product-description">{{product.description}}</p>
+
+            <p class="product-availability">Availability:
+                {% if product.available %}
+                    <span>In Stock</span>
+                {% else %}
+                    <span><span>Not In Stock</span></span>
+                {% endif %}
+            </p>
+            <p class="product-minimum-height">Minimum Height: {{product.minimum_height}}</p>
+            <p class="product-vase-description">Vase Description: {{product.vase_description}}</p>
+            <p class="product-category">Category: <span>{{product.category}}</span></p>
+
+            <p class="product-maintenance-level">
+                Maintenance Level:
+                {% if product.maintenance_level == "easy" %}
+                    <span class="maintenance-icon maintenance-easy">
+                        <i class="bi bi-emoji-smile-fill"></i> Easy
+                    </span>
+                {% elif product.maintenance_level == "medium" %}
+                    <span class="maintenance-icon maintenance-medium">
+                        <i class="bi bi-emoji-neutral-fill"></i> Medium
+                    </span>
+                {% else %}
+                    <span class="maintenance-icon maintenance-hard">
+                        <i class="bi bi-emoji-frown-fill"></i> Hard
+                    </span>
+                {% endif %}
+            </p>
+
+            <!-- Quantity Form -->
+            {% if request.user.is_authenticated %}
+                <form class="quantity-form" action="{% url 'orders:cart_add' product.id %}" method="post">
+                    {% csrf_token %}
+                    {{purchase_form.as_p}}
+                    <button type="submit" class="btn btn-add-to-cart">Add to Cart</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="comments-section">
+        {% if request.user.is_authenticated %}
+            <h2>Add a Comment</h2>
+
+            <!-- Add Comment Form -->
+            <form class="reply-form mb-4" action="" method="post">
+                {% csrf_token %}
+                {{form.as_p}}
+                <button type="submit" class="btn btn-success mt-2">Submit Comment</button>
+            </form>
+        {% else %}
+            <h2 class="product-name" style="font-size: 1.2rem;"> Only logged in users can comment</h2><br><br>
+        {% endif %}
+
+        <h2>Comments</h2>
+
+        <!-- Existing Comments -->
+        {% for comment in comments %}
+            {% if comment.admin_confirmation %}
+                <div class="comment">
+                    <p class="comment-author">{{comment.author_name}} <span class="comment-date">- {{comment.created}}</span></p>
+                    <p class="comment-text">{{comment.comment_text}}</p>
+                    <span class="reply-btn">Reply</span>
+                    <!-- Add Comment Reply -->
+                    {% if request.user.is_authenticated %}
+                        <form class="reply-form" action="{% url 'products:reply_comments' product.id comment.id %}" method="post">
+                            {% csrf_token %}
+                            {{form.as_p}}
+                            <button type="submit" class="btn btn-success mt-2">Submit Comment</button>
+                        </form>
+                    {% endif %}
+
+                    <!-- Reply -->
+                    {% with replies=comment.answers_comment.all %}
+                        {% for reply in replies %}
+                            {% if reply.admin_confirmation %}
+                                <div class="reply">
+                                    <p class="comment-author">{{reply.author_name}} <span class="comment-date">- {{reply.created}}</span></p>
+                                    <p class="comment-text">{{reply.comment_text}}</p>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endwith %}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
 
 {% endblock content %}
