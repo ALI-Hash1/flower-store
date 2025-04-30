@@ -2,33 +2,32 @@
 {% load static %}
 
 {% block extra_headers %}
-    <link rel="stylesheet" href="{% static 'orders/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'orders/css/cart-style.css' %}">
 {% endblock %}
 
 {% block content %}
 
-    <div class="container">
-        <!-- Cart Items -->
+    <div class="cart-container">
+        <!-- Cart Header -->
+        <h1 class="cart-header">Shopping Cart</h1>
 
+        <!-- Cart Items -->
         {% for item in cart %}
             <div class="cart-item">
-                <div class="item-info">
-                    <h3>{{item.product.name}}</h3>
-                    <p>Quantity: {{item.quantity}}</p>
+                <div>
+                    <p class="cart-item-name">{{item.product.name}}</p>
+                    <p class="cart-item-quantity">Quantity: {{item.quantity}}</p>
                 </div>
-                <div style="margin-right: 10px;" class="item-total ">{{item.total_price}}</div>
-                <a href="{% url 'orders:cart_remove' item.product.id %}" class="btn btn-danger"> Delete </a>
+                <p class="cart-item-total-price">${{item.total_price}}</p>
+                <a href="{% url 'orders:cart_remove' item.product.id %}"><button class="cart-item-delete">Delete</button></a>
             </div>
         {% endfor %}
 
         <!-- Cart Summary -->
         <div class="cart-summary">
-            <div class="total-label">Total:</div>
-            <div class="total-price">{{cart.get_total_price}}</div>
+            <p>Total Price: <span class="cart-total-price">${{cart.get_total_price}}</span></p>
+            <a href="{% url 'orders:order_create' %}"><button class="checkout-btn">Checkout</button></a>
         </div>
-
-        <!-- Checkout Button -->
-        <a href="{% url 'orders:order_create' %}" class="checkout-btn">Checkout</a>
     </div>
 
 {% endblock %}
