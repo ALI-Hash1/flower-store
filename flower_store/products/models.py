@@ -3,6 +3,9 @@ from accounts.models import User
 from django.core.validators import MaxValueValidator
 from utils import SEOMixin
 from articles.models import Article
+from django.conf import settings
+import wget
+
 
 
 class Product(SEOMixin, models.Model):
@@ -23,6 +26,25 @@ class Product(SEOMixin, models.Model):
     )
 
     maintenance_level = models.CharField(max_length=10, choices=DIFFICULTY_CHOICES)
+
+    def save(self, *args, **kwargs):
+
+        if self.pk:
+
+            old_instance = self.__class__.objects.get(pk=self.pk)
+
+            if old_instance.image == self.image.name:
+
+                path = '/home/ali/flower-store/flower_store/media-files'
+                download_path = f"{settings.AWS_S3_ENDPOINT_URL}/{settings.AWS_STORAGE_BUCKET_NAME}/{str(self.image)}"
+
+                try:
+                    wget.download(download_path, out=path)
+                    print("download the file was successfully done!")
+                except Exception as e:
+                    print("there was a problem with downloading the file!", e)
+
+        return super().save(*args, **kwargs)
 
     class Meta:
         ordering = ('name',)
@@ -56,7 +78,6 @@ class Comment(models.Model):
     comment_text = models.TextField()
     created = models.DateField(auto_now_add=True)
     admin_confirmation = models.BooleanField(default=False)
-
 
     def __str__(self):
         if self.product:

@@ -4,6 +4,8 @@ from accounts.models import User
 from django.utils.text import slugify
 from utils import SEOMixin
 from ckeditor.fields import RichTextField
+from django.conf import settings
+import wget
 
 
 class Article(SEOMixin, models.Model):
@@ -25,6 +27,25 @@ class Article(SEOMixin, models.Model):
     thumbnail = models.ImageField(blank=True, null=True)
     views = models.PositiveIntegerField(default=0)
     allow_comments = models.BooleanField(default=True)
+
+    def save(self, *args, **kwargs):
+
+        if self.pk:
+
+            old_instance = self.__class__.objects.get(pk=self.pk)
+
+            if old_instance.thumbnail == self.thumbnail.name:
+
+                path = '/home/ali/flower-store/flower_store/media-files'
+                download_path = f"{settings.AWS_S3_ENDPOINT_URL}/{settings.AWS_STORAGE_BUCKET_NAME}/{str(self.thumbnail)}"
+
+                try:
+                    wget.download(download_path, out=path)
+                    print("download the file was successfully done!")
+                except Exception as e:
+                    print("there was a problem with downloading the file!", e)
+
+        return super().save(*args, **kwargs)
 
     class Meta:
         ordering = ['-publish_date']
