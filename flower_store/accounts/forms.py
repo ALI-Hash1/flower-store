@@ -4,6 +4,7 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 from .models import User
 from django.contrib import messages
+from django.contrib.auth.forms import PasswordChangeForm
 
 
 class UserCreationForm(forms.ModelForm):
@@ -90,7 +91,12 @@ class VerifyCodeForm(forms.Form):
 
 
 class ChangeEmailForm(forms.Form):
-    email = forms.EmailField()
+    email = forms.EmailField(widget=forms.EmailInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Enter your new email address',
+        'style': 'margin-bottom: 15px; border-radius: 8px;'
+    }),
+        label="Email Address")
 
 
 class ChangePhoneForm(forms.Form):
@@ -112,10 +118,11 @@ class PhoneVerifyCodeForm(forms.Form):
 
 class SetNewPasswordForm(forms.Form):
     new_password1 = forms.CharField(
-        widget=forms.PasswordInput,
+        widget=forms.PasswordInput(attrs={'class': "form-label"}),
         label="رمز عبور جدید",
         min_length=8,
-        help_text="رمز عبور باید حداقل 8 کاراکتر داشته باشد."
+        help_text="رمز عبور باید حداقل 8 کاراکتر داشته باشد.",
+
     )
     new_password2 = forms.CharField(
         widget=forms.PasswordInput,
@@ -131,3 +138,25 @@ class SetNewPasswordForm(forms.Form):
         if pwd1 and pwd2 and pwd1 != pwd2:
             raise ValidationError("رمزهای عبور وارد شده مطابقت ندارند.")
         return cleaned_data
+
+
+class CustomPasswordChangeForm(PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['old_password'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Enter your current password',
+            'style': 'margin-bottom: 15px; border-radius: 8px;'
+        })
+        # تغییر ویجت فیلد رمز عبور جدید
+        self.fields['new_password1'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Enter your new password',
+            'style': 'margin-bottom: 15px; border-radius: 8px;'
+        })
+        # تغییر ویجت فیلد تکرار رمز عبور جدید
+        self.fields['new_password2'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Confirm your new password',
+            'style': 'margin-bottom: 15px; border-radius: 8px;'
+        })

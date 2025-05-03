@@ -1,28 +1,86 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block extra_headers %}
+<link rel="stylesheet" href="{% static 'accounts/css/profile-styles.css' %}">
+{% endblock %}
 
 {% block content %}
 
-    <h2 class="text-center"> {{user.phone_number}} </h2></br>
+<!-- Sidebar -->
+    <div class="container">
+        <div class="row">
+            <div class="col-4">
+                <div class="sidebar mt-5">
+                    <button id="dashboard-btn" class="active" onclick="showSection('dashboard')">Dashboard</button>
+                    <button id="notifications-btn" onclick="showSection('notifications')">Notifications and orders</button>
+                </div>
+            </div>
 
-    {% if request.user.email %}
-        <h5> your email is equal to: {{request.user.email}} </h5>
-    {% else %}
-        <form action="" method="post">
-            {% csrf_token %}
-            {{email_form.as_p}}
-            <input type="submit" value="send">
-        </form>
-    {% endif %}
+            <div class="col-auto">
+
+                <!-- Main Content -->
+                <div class="main-content">
+                    <!-- Dashboard Section -->
+                    <div id="dashboard" class="section active">
+                        <h2 class="mb-5">Dashboard</h2>
+                        {% if request.user.email %}
+                        <p>Email: {{request.user.email}}</p>
+                        {% else %}
+                        <form action="" method="post" class="mb-4">
+                            {% csrf_token %}
+                            {{email_form.as_p}}
+                            <button type="submit" class="btn btn-success">Change Email</button>
+                        </form>
+                        {% endif %}
+                        <p class="mb-10">Phone: {{request.user.phone_number}}</p>
+                        <h4 class="mt-30"> Do you want to change your password? </h4>
+                        <form class="mt-1" action="{% url 'accounts:user_change_password' %}" method="post">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" class="btn btn-success">Reset Password</button>
+                        </form>
+                    </div><br><br>
+
+                    <!-- Notifications Section -->
+                    <div id="notifications" class="section">
+                        <h2>Notifications</h2>
+                        <div class="notification-item">
+                            <p>We have a special discount for all users this weekend!</p>
+                        </div>
+                        <div class="notification-item">
+                            <p>Your order #12345 has been shipped and is on its way!</p>
+                        </div>
+                        <h4 class="mt-6">to see all your orders, click on the link below:</h4>
+
+                        <div class="d-grid mt-3">
+                            <a href="{% url 'orders:order_list' %}" class="btn btn-lg custom-button">Orders</a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
 
 
-    <h3> change password </h3></br>
+{% block scripts %}
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
 
-    <form action="{% url 'accounts:user_change_password' %}" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">تغییر رمز عبور</button>
-    </form>
-    <br><hr><br>
-    <a class="btn btn-primary" href="{% url 'orders:order_list' %}">orders</a>
+            // Show the selected section
+            document.getElementById(sectionId).classList.add('active');
 
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.sidebar button');
+            buttons.forEach(button => button.classList.remove('active'));
+
+            // Add active class to clicked button
+            document.getElementById(sectionId + '-btn').classList.add('active');
+        }
+    </script>
 {% endblock %}

@@ -16,7 +16,10 @@
     {% include 'inc/messages.html' %}
     {% include 'inc/navbar.html' %}
 
-    {% block content %} {% endblock %}
+    <div class="content">
+        {% block content %} {% endblock %}
+    </div>
+
 
     {% block scripts %} {% endblock %}
 

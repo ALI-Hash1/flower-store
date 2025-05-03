@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, redirect
 from django.views import View
 from .forms import RegisterForm, LoginForm, VerifyCodeForm, ChangeEmailForm, ChangePhoneForm, PhoneVerifyCodeForm, \
-    SetNewPasswordForm
+    SetNewPasswordForm, CustomPasswordChangeForm
 from .models import User, OtpCode
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
@@ -104,7 +104,7 @@ class RegisterVerifyCodeView(View):
 class ProfileView(UserPassesTestMixin, View):
     def setup(self, request, *args, **kwargs):
         self.user = get_object_or_404(User, id=kwargs['user_id'])
-        self.password_form = PasswordChangeForm(user=self.user)
+        self.password_form = CustomPasswordChangeForm(user=self.user)
         return super().setup(request, *args, **kwargs)
 
     def test_func(self):
