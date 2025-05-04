@@ -11,22 +11,21 @@
     <link rel="stylesheet" href="{% static 'css/base-styles.css' %}">
     {% block extra_headers %} {% endblock %}
 </head>
-<body>
+    <body>
 
-    {% include 'inc/messages.html' %}
-    {% include 'inc/navbar.html' %}
+        {% include 'inc/messages.html' %}
+        {% include 'inc/navbar.html' %}
 
-    <div class="content">
-        {% block content %} {% endblock %}
-    </div>
+        <div class="content">
+            {% block content %} {% endblock %}
+        </div>
 
+        {% include 'inc/footer.html' %}
 
-    {% block scripts %} {% endblock %}
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
 
-    {% include 'inc/footer.html' %}
+        {% block scripts %} {% endblock %}
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
-
-</body>
+    </body>
 </html>

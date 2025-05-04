@@ -1,23 +1,47 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block extra_headers %}
+    <link rel="stylesheet" href="{% static 'orders/css/user-order-styles.css' %}">
+{% endblock %}
 
 {% block content %}
+    <div class="orders-collection">
+        <h2 class="orders-collection-title">User Orders</h2>
+        {% for order in orders %}
 
-    {% for order in orders %}
-        <hr><br><br>
-        paid situation: {{order.paid}}<br>
-        total price: {{order.get_total_price}}<br>
+            <!-- Order Card -->
+            <div class="order-card">
+                <!-- Order Header -->
+                <div class="order-header">
+                    <h5>Order #{{order.id}}</h5>
+                    {% if order.paid %}
+                        <span>Status: Completed</span>
+                    {% else %}
+                        <span>Status: Pending</span>
+                    {% endif %}
+                </div>
 
-        <br>
-        {% for item in order.items.all %}
-            <hr><br>products:<br>
-            name: {{item.product.name}}
-            <br>
-            quantity: {{item.quantity}}
+                <!-- Order Body -->
+                <div class="order-body">
+                    <p><strong>Total Price:</strong> ${{order.get_total_price}}</p>
+                    <h6>Products:</h6>
+                    {% for order_item in order.items.all %}
+                        <div class="product-item">
+                            <span>{{order_item.product.name}}</span>
+                            <span>Quantity: {{order_item.quantity}}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Order Footer -->
+                <div class="order-footer">
+                    <a class="btn btn-pay" href="{% url 'orders:order_detail' order.id %}">Pay</a>
+                    <a class="btn btn-delete" href="{% url 'orders:order_delete' order.id %}">Delete</a>
+                </div>
+            </div>
+
         {% endfor %}
-        <br><hr><br>
-        <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-success"> order details and pay </a>
-        <a href="{% url 'orders:order_delete' order.id %}" class="btn btn-danger">حذف سفارش</a>
-    {% endfor %}
-
+    </div>
 
 {% endblock content %}

@@ -48,12 +48,18 @@ class CartRemoveView(LoginRequiredMixin, View):
 
 
 class CreateOrderView(LoginRequiredMixin, View):
+    def dispatch(self, request, *args, **kwargs):
+        self.cart = Cart(request)
+        if not self.cart.get_total_price():
+            return render(request, 'orders/cart.html', {'cart': self.cart})
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request):
-        cart = Cart(request)
+
         order = Order.objects.create(user=request.user)
-        for item in cart:
+        for item in self.cart:
             OrderItem.objects.create(product=item['product'], order=order, quantity=item['quantity'])
-        cart.clear()
+        self.cart.clear()
         return redirect('orders:order_detail', order.id)
 
 

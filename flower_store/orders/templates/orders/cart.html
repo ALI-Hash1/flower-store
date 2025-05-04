@@ -26,8 +26,15 @@
         <!-- Cart Summary -->
         <div class="cart-summary">
             <p>Total Price: <span class="cart-total-price">${{cart.get_total_price}}</span></p>
-            <a href="{% url 'orders:order_create' %}"><button class="checkout-btn">Checkout</button></a>
+            <a href="{% url 'orders:order_create' %}"><button class="checkout-btn" {% if not cart.get_total_price %} data-bs-trigger="hover focus" disabled data-bs-toggle="popover" data-bs-title="Don't Have A Product In The Cart" data-bs-content="There must be at least one product in your shopping cart in order to make an order." {% endif %}>Checkout</button></a>
         </div>
     </div>
 
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+        const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+    </script>
 {% endblock %}

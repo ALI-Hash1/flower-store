@@ -1,0 +1,89 @@
+.orders-collection {
+    margin: 2rem auto;
+    max-width: 1000px;
+    background-color: var(--white);
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.orders-collection-title {
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: var(--green-dark);
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--green-light);
+    padding-bottom: 0.5rem;
+}
+
+.order-card {
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+}
+
+.order-header {
+    background-color: var(--green-dark);
+    color: var(--white);
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.order-header h5 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.order-body {
+    padding: 1rem;
+}
+
+.order-footer {
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #eaeaea;
+}
+
+.product-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.product-item:last-child {
+    border-bottom: none;
+}
+
+.btn-pay {
+    background-color: var(--green-dark);
+    color: var(--white);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-pay:hover {
+    background-color: var(--green-medium);
+}
+
+.btn-delete {
+    background-color: var(--red-dark);
+    color: var(--white);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-delete:hover {
+    background-color: #a4373a;
+}
