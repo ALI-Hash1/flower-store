@@ -9,4 +9,9 @@ class CartAddForm(forms.Form):
 
 
 class CouponApplyForm(forms.Form):
-    code = forms.CharField(max_length=5)
+    code = forms.CharField(max_length=5, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Enter discount code',
+        'style': 'border-radius: 8px; border: 1px solid #6a994e; padding: 10px; font-size: 1rem; margin-bottom: 15px;',
+    }),
+                           label="")

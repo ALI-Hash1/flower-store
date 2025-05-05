@@ -3,7 +3,7 @@
 {% block content %}
 
     <h1>{{article.title}}</h1><br>
-    <p> {{article.content}} </p>
+    <p> {{article.content|safe}} </p>
 
     {% if request.user.is_authenticated %}
         <form action="" method="post">
