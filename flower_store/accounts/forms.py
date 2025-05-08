@@ -1,10 +1,8 @@
 from django import forms
-from django.forms import PasswordInput
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 from .models import User
-from django.contrib import messages
-from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
 
 
 class UserCreationForm(forms.ModelForm):
@@ -100,7 +98,11 @@ class ChangeEmailForm(forms.Form):
 
 
 class ChangePhoneForm(forms.Form):
-    phone_number = forms.CharField(max_length=11, min_length=11)
+    phone_number = forms.CharField(max_length=11, min_length=11, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Enter your phone number',
+        'style': 'border-radius: 8px; border: 1px solid #6a994e; padding: 10px; font-size: 1rem;',
+    }), )
 
     def clean_phone_number(self):
         phone = self.cleaned_data.get('phone_number')
@@ -113,8 +115,17 @@ class ChangePhoneForm(forms.Form):
 
 
 class PhoneVerifyCodeForm(forms.Form):
-    code = forms.IntegerField()
-
+    code = forms.IntegerField(
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control code-input',
+            'style': 'width: 60px; height: 60px; padding: 10px; font-size: 1.5rem; text-align: center; border-radius: 8px; border: 2px solid #6a994e;',
+            'maxlength': '4',
+            'inputmode': 'numeric',
+            'pattern': '[0-9]*',
+        }),
+        label="",
+        required=True
+    )
 
 class SetNewPasswordForm(forms.Form):
     new_password1 = forms.CharField(
@@ -148,15 +159,23 @@ class CustomPasswordChangeForm(PasswordChangeForm):
             'placeholder': 'Enter your current password',
             'style': 'margin-bottom: 15px; border-radius: 8px;'
         })
-        # تغییر ویجت فیلد رمز عبور جدید
         self.fields['new_password1'].widget.attrs.update({
             'class': 'form-control',
             'placeholder': 'Enter your new password',
             'style': 'margin-bottom: 15px; border-radius: 8px;'
         })
-        # تغییر ویجت فیلد تکرار رمز عبور جدید
         self.fields['new_password2'].widget.attrs.update({
             'class': 'form-control',
             'placeholder': 'Confirm your new password',
             'style': 'margin-bottom: 15px; border-radius: 8px;'
         })
+
+
+class CustomPasswordResetForm(PasswordResetForm):
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter your email address',
+            'style': 'border-radius: 8px; border: 1px solid #6a994e; padding: 10px; font-size: 1rem;',
+        })
+    )

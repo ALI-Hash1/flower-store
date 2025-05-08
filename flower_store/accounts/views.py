@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, redirect
 from django.views import View
 from .forms import RegisterForm, LoginForm, VerifyCodeForm, ChangeEmailForm, ChangePhoneForm, PhoneVerifyCodeForm, \
-    SetNewPasswordForm, CustomPasswordChangeForm
+    SetNewPasswordForm, CustomPasswordChangeForm, CustomPasswordResetForm
 from .models import User, OtpCode
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
@@ -133,6 +133,7 @@ class PasswordResetView(auth_views.PasswordResetView):
     template_name = 'accounts/password-reset-form.html'
     success_url = reverse_lazy('accounts:user_reset_password_done')
     email_template_name = 'accounts/password-reset-email.html'
+    form_class = CustomPasswordResetForm
 
 
 class PasswordResetDoneView(auth_views.PasswordResetDoneView):
@@ -142,6 +143,7 @@ class PasswordResetDoneView(auth_views.PasswordResetDoneView):
 class PasswordResetConfirmView(auth_views.PasswordResetConfirmView):
     template_name = 'accounts/password-reset-confirm.html'
     success_url = reverse_lazy('accounts:user_login')
+    form_class = CustomPasswordChangeForm
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -229,23 +231,24 @@ class PasswordResetPhoneDoneView(View):
 
 
 class PasswordResetFunctionView(View):
-    form = SetNewPasswordForm
+    def setup(self, request, *args, **kwargs):
+        user_session = request.session['user_reset_phone']
+        self.user = User.objects.get(phone_number=user_session['phone_number'])
+        self.form = CustomPasswordChangeForm
+        super().setup(request, *args, **kwargs)
+
     template = 'accounts/phone-change-password.html'
 
     def get(self, request):
         if not request.session.get('key'):
             messages.error(request, "دسترسی غیرمجاز. لطفاً ابتدا درخواست ریست رمز عبور را انجام دهید")
             return redirect('accounts:user_reset_password_phone')
-        return render(request, self.template, {'form': self.form})
+        return render(request, self.template, {'form': self.form(self.user)})
 
     def post(self, request):
-        form = self.form(request.POST)
+        form = self.form(self.user, request.POST)
         if form.is_valid():
-            cd = form.cleaned_data
-            user_session = request.session['user_reset_phone']
-            user = User.objects.get(phone_number=user_session['phone_number'])
-            user.set_password(cd['new_password1'])
-            user.save()
+            form.save()
             messages.success(self.request, "رمز عبور شما با موفقیت تغییر یافت. لطفاً با رمز عبور جدید وارد شوید.",
                              "success")
             del request.session['user_reset_phone']
