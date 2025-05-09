@@ -9,11 +9,10 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li><a href="{% url 'home:home_page' %}">Home</a></li>
                     {% if request.user.is_authenticated %}
-                        <li><a href="{% url 'accounts:user_profile' request.user.id %}">Profile</a></li>
                         <li><a href="{% url 'accounts:user_logout' %}">Logout</a></li>
                         <li><a href="{% url 'orders:cart' %}">cart</a></li>
+                        <li><a href="{% url 'accounts:user_profile' request.user.id %}">Profile</a></li>
                         {% if request.user.is_admin %}
                             <li><a href="{% url 'home:bucket' %}">bucket</a></li>
                         {% endif %}
@@ -21,6 +20,7 @@
                         <li><a href="{% url 'accounts:user_register' %}">Register</a></li>
                         <li><a href="{% url 'accounts:user_login' %}">Login</a></li>
                     {% endif %}
+                    <li><a href="{% url 'home:home_page' %}">Home</a></li>
                 </ul>
             </div>
         </div>

@@ -80,8 +80,16 @@ class RegisterForm(forms.Form):
 
 
 class LoginForm(forms.Form):
-    phone_number = forms.CharField(max_length=11, min_length=11)
-    password = forms.CharField(widget=forms.PasswordInput, label='Password')
+    phone_number = forms.CharField(max_length=11, min_length=11, widget=forms.TextInput(attrs={
+        'class': 'form-control',  # Bootstrap class for styling
+        'placeholder': 'Enter your phone number',
+        'style': 'font-size: 1.2rem;',  # Larger font size
+    }))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={
+        'class': 'form-control',  # Bootstrap class for styling
+        'placeholder': 'Enter your password',
+        'style': 'font-size: 1.2rem;',  # Larger font size
+    }), label='Password')
 
 
 class VerifyCodeForm(forms.Form):
@@ -126,6 +134,7 @@ class PhoneVerifyCodeForm(forms.Form):
         label="",
         required=True
     )
+
 
 class SetNewPasswordForm(forms.Form):
     new_password1 = forms.CharField(

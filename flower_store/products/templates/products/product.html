@@ -58,6 +58,8 @@
                     {{purchase_form.as_p}}
                     <button type="submit" class="btn btn-add-to-cart">Add to Cart</button>
                 </form>
+            {% else %}
+                <br><br><p style="font-size: 29px;" class="product-category"><span>to buy the product, you must first log in to the website</span></p>
             {% endif %}
         </div>
     </div>

@@ -1,154 +1,155 @@
 .product-card {
-            display: flex;
-            flex-wrap: wrap;
-            margin: 2rem auto;
-            max-width: 900px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-            border-radius: 10px;
-            overflow: hidden;
-            background-color: var(--white);
-        }
+    display: flex;
+    flex-wrap: wrap;
+    margin: 2rem auto;
+    max-width: 900px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    background-color: var(--white);
+    height: 600px;
+    overflow: hidden
+}
 
-        .product-image {
-            flex: 1;
-            max-width: 50%;
-            background: url('https://via.placeholder.com/450x450') no-repeat center center / cover;
-        }
+.product-image {
+    flex: 1;
+    max-width: 50%;
+    background: url('https://via.placeholder.com/450x450') no-repeat center center / cover;
+}
 
-        .product-details {
-            flex: 1;
-            padding: 2rem;
-        }
+.product-details {
+    flex: 1;
+    padding: 2rem;
+}
 
-        .product-name {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--red-dark);
-        }
+.product-name {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--red-dark);
+}
 
-        .product-price {
-            font-size: 1.5rem;
-            color: var(--green-medium);
-            font-weight: bold;
-        }
+.product-price {
+    font-size: 1.5rem;
+    color: var(--green-medium);
+    font-weight: bold;
+}
 
-        .product-description {
-            margin: 1rem 0;
-            font-size: 1rem;
-            color: var(--gray-dark);
-        }
+.product-description {
+    margin: 1rem 0;
+    font-size: 1rem;
+    color: var(--gray-dark);
+}
 
-        .product-availability {
-            font-size: 1rem;
-            font-weight: bold;
-            margin: 0.5rem 0;
-        }
+.product-availability {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0.5rem 0;
+}
 
-        .product-availability span {
-            color: var(--green-medium);
-        }
+.product-availability span {
+    color: var(--green-medium);
+}
 
-        .product-availability span span{
-            color: var(--red-dark);
-        }
+.product-availability span span{
+    color: var(--red-dark);
+}
 
-        .product-minimum-height,
-        .product-vase-description,
-        .product-category,
-        .product-maintenance-level {
-            margin: 0.5rem 0;
-            font-size: 1rem;
-        }
+.product-minimum-height,
+.product-vase-description,
+.product-category,
+.product-maintenance-level {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+}
 
-        .product-category span {
-            font-weight: bold;
-            color: var(--red-dark);
-        }
+.product-category span {
+    font-weight: bold;
+    color: var(--red-dark);
+}
 
-        .maintenance-icon {
-            font-size: 1.5rem;
-            margin-right: 0.5rem;
-        }
+.maintenance-icon {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+}
 
-        .maintenance-easy {
-            color: var(--green-medium);
-        }
+.maintenance-easy {
+    color: var(--green-medium);
+}
 
-        .maintenance-medium {
-            color: var(--yellow-dark);
-        }
+.maintenance-medium {
+    color: var(--yellow-dark);
+}
 
-        .maintenance-hard {
-            color: var(--red-dark);
-        }
+.maintenance-hard {
+    color: var(--red-dark);
+}
 
-        .quantity-form {
-            margin: 2rem 0;
-            gap: 1rem; /* Adds spacing between input and button */
-            align-items: center;
-        }
+.quantity-form {
+    margin: 2rem 0;
+    gap: 1rem; /* Adds spacing between input and button */
+    align-items: center;
+}
 
-        .quantity-input {
-            max-width: 200px;
-        }
+.quantity-input {
+    max-width: 200px;
+}
 
-        .btn-add-to-cart {
-            background-color: var(--red-dark);
-            color: var(--white);
-            border: none;
-            font-size: 1rem;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+.btn-add-to-cart {
+    background-color: var(--red-dark);
+    color: var(--white);
+    border: none;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
 
-        .btn-add-to-cart:hover {
-            background-color: #a4373a;
-        }
+.btn-add-to-cart:hover {
+    background-color: #a4373a;
+}
 
-        .comments-section {
-            margin: 2rem auto;
-            max-width: 900px;
-            padding: 2rem;
-            background-color: var(--white);
-            border-radius: 10px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-        }
+.comments-section {
+    margin: 2rem auto;
+    max-width: 900px;
+    padding: 2rem;
+    background-color: var(--white);
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
 
-        .comment {
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid #eaeaea;
-            padding-bottom: 1rem;
-        }
+.comment {
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #eaeaea;
+    padding-bottom: 1rem;
+}
 
-        .comment .comment-author {
-            font-weight: bold;
-            color: var(--red-dark);
-        }
+.comment .comment-author {
+    font-weight: bold;
+    color: var(--red-dark);
+}
 
-        .comment .comment-date {
-            font-size: 0.9rem;
-            color: var(--gray-dark);
-        }
+.comment .comment-date {
+    font-size: 0.9rem;
+    color: var(--gray-dark);
+}
 
-        .comment .comment-text {
-            margin-top: 0.5rem;
-            font-size: 1rem;
-        }
+.comment .comment-text {
+    margin-top: 0.5rem;
+    font-size: 1rem;
+}
 
-        .comment .reply-btn {
-            font-size: 0.9rem;
-            color: var(--green-medium);
-            cursor: pointer;
-        }
+.comment .reply-btn {
+    font-size: 0.9rem;
+    color: var(--green-medium);
+    cursor: pointer;
+}
 
-        .reply-form {
-            margin-top: 1rem;
-        }
+.reply-form {
+    margin-top: 1rem;
+}
 
-        .reply {
-            margin-left: 2rem;
-            margin-top: 1rem;
-            border-left: 2px solid #eaeaea;
-            padding-left: 1rem;
-        }
+.reply {
+    margin-left: 2rem;
+    margin-top: 1rem;
+    border-left: 2px solid #eaeaea;
+    padding-left: 1rem;
+}
