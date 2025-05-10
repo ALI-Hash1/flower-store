@@ -1,37 +1,88 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block extra_headers %}
+    <link rel="stylesheet" href="{% static 'articles/css/article-styles.css' %}">
+    <link rel="stylesheet" href="{% static 'products/css/product-styles.css' %}">
+{% endblock %}
 
 {% block content %}
 
-    <h1>{{article.title}}</h1><br>
-    <p> {{article.content|safe}} </p>
-
-    {% if request.user.is_authenticated %}
-        <form action="" method="post">
-            {% csrf_token %}
-            {{form.as_p}}
-            <input type="submit" value="Send">
-        </form>
-    {% else %}
-        <p class="alert alert-danger"> Only logged in users can comment</p>
-    {% endif %}
     <br><hr><br>
-    {% for comment in comments %}
-        <h4>{{comment.author_name}}</h4>
-        <p> {{comment.comment_text}} </p>
-        <br>
+    <div class="banner">
+        <h1>{{article.title}}</h1>
+        <p>{{article.meta_description}}</p>
+    </div>
+
+    <div class="article-container">
+        <!-- بخش تصویر مقاله و متادیتا -->
+        <div class="article-header">
+            <div class="article-image">
+                <img src="{{host_name}}{{article.thumbnail}}" alt="{{article.keyword}}">
+            </div>
+            <div class="m-auto p-20 article-meta">
+                <div class="meta-item"><i class="bi bi-person"></i> Author: <span>Ali Hashemi</span></div>
+                <div class="meta-item"><i class="bi bi-tags"></i> Category: <span>{{article.category}}</span></div>
+                <div class="meta-item"><i class="bi bi-eye"></i> Views: <span>{{article.views}}</span></div>
+                <div class="meta-item"><i class="bi bi-chat-left-dots"></i> Comments: <span>{{ comments|length }}</span></div>
+            </div>
+        </div>
+
+        <!-- متن مقاله -->
+        <div class="article-content">
+            {{article.content | safe}}
+        </div>
+
+        <br><hr><br>
+
+        <!-- Comments Section -->
+
         {% if request.user.is_authenticated %}
-            <form action="{% url 'articles:reply_comments' article.id comment.id %}" method="post">
+            <h2>Add a Comment</h2>
+
+            <!-- Add Comment Form -->
+            <form class="reply-form mb-4" method="post">
                 {% csrf_token %}
                 {{form.as_p}}
-                <input type="submit" value="Send">
+                <button type="submit" class="btn btn-success mt-2">Submit Comment</button>
             </form>
+        {% else %}
+            <h2 class="product-name" style="font-size: 1.2rem;"> Only logged in users can comment</h2><br><br>
         {% endif %}
-        {% with replies=comment.answers_comment.all %}
-            {% for reply in replies %}
-                <p class="bg-primary p-3 m-2"> {{reply.user}} <br>{{reply.comment_text}}</p>
-            {% endfor %}
-        {% endwith %}
-        <br><br>
-    {% endfor %}
+
+        <h2>Comments</h2>
+
+        <!-- Existing Comments -->
+        {% for comment in comments %}
+            {% if comment.admin_confirmation %}
+                <div class="comment">
+                    <p class="comment-author">{{comment.author_name}} <span class="comment-date">- {{comment.created}}</span></p>
+                    <p class="comment-text">{{comment.comment_text}}</p>
+                    <span class="reply-btn">Reply</span>
+                    <!-- Add Comment Reply -->
+                    {% if request.user.is_authenticated %}
+                        <form class="reply-form" action="{% url 'articles:reply_comments' article.id comment.id %}" method="post">
+                            {% csrf_token %}
+                            {{form.as_p}}
+                            <button type="submit" class="btn btn-success mt-2">Submit Comment</button>
+                        </form>
+                    {% endif %}
+
+                    <!-- Reply -->
+                    {% with replies=comment.answers_comment.all %}
+                        {% for reply in replies %}
+                            {% if reply.admin_confirmation %}
+                                <div class="reply">
+                                    <p class="comment-author">{{reply.author_name}} <span class="comment-date">- {{reply.created}}</span></p>
+                                    <p class="comment-text">{{reply.comment_text}}</p>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endwith %}
+                </div>
+            {% endif %}
+        {% endfor %}
+
+    </div>
 
 {% endblock %}
