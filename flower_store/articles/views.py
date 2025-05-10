@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.shortcuts import reverse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 class ArticleView(View):
@@ -55,3 +56,19 @@ class ArticleReplyCommentView(LoginRequiredMixin, View):
             return redirect(reverse('articles:article', args=(article.slug,)))
         return render(request, 'articles/article.html',
                       context={'form': form, 'article': article, 'comments': all_comment})
+
+
+class ShowArticlesView(View):
+    def get(self, request):
+        articles = Article.objects.all()
+        paginator = Paginator(articles, 3)
+        page = request.GET.get('page', 1)
+        try:
+            articles = paginator.page(page)
+        except PageNotAnInteger:
+            # اگر شماره صفحه عددی نبود، صفحه اول را برگردانید
+            articles = paginator.page(1)
+        except EmptyPage:
+            # اگر شماره صفحه خارج از محدوده بود، صفحه‌ی آخر را برگردانید
+            articles = paginator.page(paginator.num_pages)
+        return render(request, "articles/all-view-articles.html", context={'articles': articles, 'paginator': paginator})
