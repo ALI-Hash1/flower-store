@@ -1,4 +1,3 @@
-import requests
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
@@ -10,6 +9,8 @@ from django.shortcuts import reverse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from orders.forms import CartAddForm
+from .models import Product
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 class ProductDetailView(View):
@@ -58,3 +59,20 @@ class ProductReplyCommentView(LoginRequiredMixin, View):
             return redirect(reverse('products:detail_view', args=(product.slug,)))
         return render(request, 'products/product.html',
                       context={'form': form, 'product': product, 'comments': all_comment})
+
+
+class ShowAllProducts(View):
+    def get(self, request):
+        products = Product.objects.all()
+        paginator = Paginator(products, 3)
+        page = request.GET.get('page', 1)
+        try:
+            products = paginator.page(page)
+        except PageNotAnInteger:
+            # اگر شماره صفحه عددی نبود، صفحه اول را برگردانید
+            products = paginator.page(1)
+        except EmptyPage:
+            # اگر شماره صفحه خارج از محدوده بود، صفحه‌ی آخر را برگردانید
+            products = paginator.page(paginator.num_pages)
+        return render(request, "products/show-all-products.html",
+                      context={'products': products, 'paginator': paginator})
