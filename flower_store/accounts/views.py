@@ -1,11 +1,10 @@
 import datetime
 import pytz
-import uuid
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, redirect
 from django.views import View
 from .forms import RegisterForm, LoginForm, VerifyCodeForm, ChangeEmailForm, ChangePhoneForm, PhoneVerifyCodeForm, \
-    SetNewPasswordForm, CustomPasswordChangeForm, CustomPasswordResetForm
+    CustomPasswordChangeForm, CustomPasswordResetForm
 from .models import User, OtpCode
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
@@ -32,7 +31,7 @@ class RegisterView(AnonymousRequiredMixin, View):
             random_code = randint(1000, 9999)
             OtpCode.objects.create(phone_number=cd['phone_number'], code=random_code)
             request.session['user_register_info'] = {'phone_number': cd['phone_number'], 'password': cd['password1']}
-            messages.success(request, 'کد پیامک شده را وارد کنید...', 'success')
+            messages.success(request, 'enter the SMS code', 'success')
             send_otp_code(cd['phone_number'], random_code)
             return redirect('accounts:user_verify')
         return render(request, self.template_name, {'form': form})
@@ -58,16 +57,16 @@ class LoginView(AnonymousRequiredMixin, View):
                 login(request, user)
                 if self.next:
                     return redirect(self.next)
-                messages.success(request, 'شما با موفقیت وارد شدید', 'success')
+                messages.success(request, 'you successfully log in', 'success')
                 return redirect('home:home_page')
-            messages.error(request, 'شماره تلفن یا رمزعبور اشتباه است', 'danger')
+            messages.error(request, 'your phone number or password is wrong', 'danger')
         return render(request, self.template_name, {'form': form})
 
 
 class LogoutView(LoginRequiredMixin, View):
     def get(self, request):
         logout(request)
-        messages.success(request, 'شما با موفقیت خارج شدید', 'success')
+        messages.success(request, 'you successfully log out', 'success')
         return redirect('home:home_page')
 
 
@@ -157,9 +156,9 @@ class PasswordChangeView(LoginRequiredMixin, View):
         if form.is_valid():
             form.save()
             update_session_auth_hash(request, form.user)
-            messages.success(request, 'رمز عبور شما با موفقیت تغییر یافت.')
+            messages.success(request, 'your password successfully changed')
             return redirect(reverse('accounts:user_profile', args=(request.user.id,)))
-        messages.error(request, 'لطفاً اطلاعات صحیح وارد کنید.')
+        messages.error(request, 'pleas enter the correct information')
         return render(request, 'accounts/profile.html', context={'user': request.user, 'form': form})
 
 
@@ -182,7 +181,7 @@ class PasswordResetPhoneView(View):
             cd = form.cleaned_data
             user = User.objects.filter(phone_number=cd['phone_number'])
             if not user.exists():
-                messages.success(request, 'کد پیامک شده را وارد کنید...', 'success')
+                messages.success(request, 'enter the SMS code', 'success')
                 return redirect('accounts:user_reset_password_phone_done')
             random_code = randint(1000, 9999)
             exist_code = OtpCode.objects.get(phone_number=cd['phone_number'])
@@ -190,7 +189,7 @@ class PasswordResetPhoneView(View):
                 exist_code.delete()
             OtpCode.objects.create(phone_number=cd['phone_number'], code=random_code)
             request.session['user_reset_phone'] = {'phone_number': cd['phone_number']}
-            messages.success(request, 'کد پیامک شده را وارد کنید...', 'success')
+            messages.success(request, 'enter the SMS code', 'success')
             send_otp_code(cd['phone_number'], random_code)
             return redirect('accounts:user_reset_password_phone_done')
         return render(request, self.template, {'form': form})
@@ -210,22 +209,22 @@ class PasswordResetPhoneDoneView(View):
             try:
                 code_instance = OtpCode.objects.get(phone_number=user_session['phone_number'])
             except OtpCode.DoesNotExist:
-                messages.error(request, "این کد اشتباه است, دوباره تلاش کنید...", "danger")
+                messages.error(request, "this code is wrong, try again", "danger")
                 return redirect('accounts:user_reset_password_phone')
             cd = form.cleaned_data
             if cd['code'] == code_instance.code:
                 if datetime.datetime.now(tz=pytz.timezone('Asia/Tehran')) <= code_instance.created + datetime.timedelta(
                         minutes=2):
                     request.session['key'] = {'sample_key': 'abc'}
-                    messages.success(request, 'رمز عبور خود را تغییر دهید...', 'success')
+                    messages.success(request, 'change your password', 'success')
                     return redirect('accounts:user-reset-password-function')
                 else:
-                    messages.error(request, 'کد ارسالی منقضی شده است, لطفا دوباره تلاش کنید...', "danger")
+                    messages.error(request, 'the submitted code has expired, pleas again...', "danger")
                     del request.session['user_reset_phone']
                     return redirect('accounts:user_reset_password_phone')
             else:
                 del request.session['user_reset_phone']
-                messages.error(request, 'کد ارسالی شما اشتباه بود, دوباره تلاش کنید...', 'danger')
+                messages.error(request, 'this code is wrong, try again', 'danger')
                 return redirect('accounts:user_reset_password_phone')
         return render(request, self.template, {'form': form})
 
@@ -241,7 +240,7 @@ class PasswordResetFunctionView(View):
 
     def get(self, request):
         if not request.session.get('key'):
-            messages.error(request, "دسترسی غیرمجاز. لطفاً ابتدا درخواست ریست رمز عبور را انجام دهید")
+            messages.error(request, "Unauthorized access, please first request password reset")
             return redirect('accounts:user_reset_password_phone')
         return render(request, self.template, {'form': self.form(self.user)})
 
@@ -249,7 +248,7 @@ class PasswordResetFunctionView(View):
         form = self.form(self.user, request.POST)
         if form.is_valid():
             form.save()
-            messages.success(self.request, "رمز عبور شما با موفقیت تغییر یافت. لطفاً با رمز عبور جدید وارد شوید.",
+            messages.success(self.request, "your password was successfully changed, please log in with new password",
                              "success")
             del request.session['user_reset_phone']
             del request.session['key']

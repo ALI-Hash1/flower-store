@@ -78,7 +78,7 @@ else:
 ZP_API_REQUEST = f"https://{sandbox}.zarinpal.com/pg/rest/WebGate/PaymentRequest.json"
 ZP_API_VERIFY = f"https://{sandbox}.zarinpal.com/pg/rest/WebGate/PaymentVerification.json"
 ZP_API_STARTPAY = f"https://{sandbox}.zarinpal.com/pg/StartPay/"
-description = "توضیحات مربوط به تراکنش را در این قسمت وارد کنید"  # Required
+description = "description of transaction"  # Required
 CallbackURL = 'http://127.0.0.1:8000/cart/verify/'
 
 
@@ -178,16 +178,17 @@ class OrderDetailView(LoginRequiredMixin, View):
             try:
                 coupon = DiscountCode.objects.get(code__exact=code, valid_from__lt=now, valid_to__gt=now, active=True)
             except DiscountCode.DoesNotExist:
-                messages.error(request, 'این کد تخفیف نامعتبر است', 'danger')
+                messages.error(request, 'this discount code is invalid', 'danger')
                 return redirect(reverse('orders:order_detail', args=(order_id,)))
             self.order.discount = coupon.discount_percentage
             self.order.save()
         return render(request, self.template, {'form': self.form, 'order': self.order})
+
 
 class OrderDeleteView(LoginRequiredMixin, View):
     def get(self, request, order_id):
         order = get_object_or_404(Order, id=order_id)
         order.delete()
         orders = request.user.orders.all()
-        messages.success(request, 'سفارش با موفقیت حذف شد', 'success')
+        messages.success(request, 'your order was successfully removed', 'success')
         return render(request, 'orders/user-orders.html', context={'orders': orders})

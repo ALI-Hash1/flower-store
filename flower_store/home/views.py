@@ -27,12 +27,12 @@ class BucketView(View):
 class DeleteBucketObjectView(View):
     def get(self, request, key):
         tasks.delete_object_task.delay(key)
-        messages.success(request, 'فایل از باکت با موفقیت حذف شد', 'info')
+        messages.success(request, 'the file was successfully deleted from the bucket', 'info')
         return redirect("home:bucket")
 
 
 class DownloadBucketObjectView(View):
     def get(self, request, key):
         tasks.download_object_task.delay(key)
-        messages.success(request, "فایل با موفقیت دانلود شد", "success")
+        messages.success(request, "the file was successfully downloaded from the bucket", "success")
         return redirect('home:bucket')

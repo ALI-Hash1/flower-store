@@ -20,8 +20,8 @@ class Article(SEOMixin, models.Model):
     updated_date = models.DateTimeField(auto_now=True)
 
     STATUS_CHOICES = [
-        ('draft', 'پیش‌ نویس'),
-        ('published', 'منتشر شده'),
+        ('draft', 'draft storage'),
+        ('published', 'publish'),
     ]
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
     thumbnail = models.ImageField(blank=True, null=True)
@@ -49,8 +49,6 @@ class Article(SEOMixin, models.Model):
 
     class Meta:
         ordering = ['-publish_date']
-        verbose_name = "مقاله"
-        verbose_name_plural = "مقالات"
 
     def __str__(self):
         return self.title
@@ -64,8 +62,6 @@ class Category(SEOMixin, models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = "دسته‌بندی"
-        verbose_name_plural = "دسته‌بندی‌ها"
         ordering = ['name']
 
     def __str__(self):
@@ -85,8 +81,6 @@ class Tag(SEOMixin, models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = "تگ"
-        verbose_name_plural = "تگ‌ ها"
         ordering = ['name']
 
     def __str__(self):

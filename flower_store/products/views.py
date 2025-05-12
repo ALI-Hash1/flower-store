@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
-from .models import Product, Comment
+from .models import Comment
 from django.shortcuts import get_object_or_404
 from .forms import CommentCreateForm
 from django.contrib import messages
@@ -55,7 +55,7 @@ class ProductReplyCommentView(LoginRequiredMixin, View):
             reply_comment.reply = comment
             reply_comment.is_reply = True
             reply_comment.save()
-            messages.success(request, 'پاسخ شما با موفقیت ثبت شد.', 'success')
+            messages.success(request, 'your answer was successfully registered', 'success')
             return redirect(reverse('products:detail_view', args=(product.slug,)))
         return render(request, 'products/product.html',
                       context={'form': form, 'product': product, 'comments': all_comment})
@@ -69,10 +69,8 @@ class ShowAllProducts(View):
         try:
             products = paginator.page(page)
         except PageNotAnInteger:
-            # اگر شماره صفحه عددی نبود، صفحه اول را برگردانید
             products = paginator.page(1)
         except EmptyPage:
-            # اگر شماره صفحه خارج از محدوده بود، صفحه‌ی آخر را برگردانید
             products = paginator.page(paginator.num_pages)
         return render(request, "products/show-all-products.html",
                       context={'products': products, 'paginator': paginator})

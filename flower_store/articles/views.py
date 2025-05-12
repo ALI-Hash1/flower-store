@@ -52,7 +52,7 @@ class ArticleReplyCommentView(LoginRequiredMixin, View):
             reply_comment.reply = comment
             reply_comment.is_reply = True
             reply_comment.save()
-            messages.success(request, 'پاسخ شما با موفقیت ثبت شد.', 'success')
+            messages.success(request, 'your answer was successfully registered', 'success')
             return redirect(reverse('articles:article', args=(article.slug,)))
         return render(request, 'articles/article.html',
                       context={'form': form, 'article': article, 'comments': all_comment})
@@ -66,9 +66,7 @@ class ShowArticlesView(View):
         try:
             articles = paginator.page(page)
         except PageNotAnInteger:
-            # اگر شماره صفحه عددی نبود، صفحه اول را برگردانید
             articles = paginator.page(1)
         except EmptyPage:
-            # اگر شماره صفحه خارج از محدوده بود، صفحه‌ی آخر را برگردانید
             articles = paginator.page(paginator.num_pages)
         return render(request, "articles/all-view-articles.html", context={'articles': articles, 'paginator': paginator})

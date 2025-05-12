@@ -63,7 +63,7 @@ class RegisterForm(forms.Form):
         p1 = cd.get('password1')
         p2 = cd.get('password2')
         if p1 and p2 and p1 != p2:
-            raise ValidationError("رمز عبور تایید شده شما مطابقت ندارد")
+            raise ValidationError("your confirmation password does not match")
         return cd
 
     def clean_phone_number(self):
@@ -71,11 +71,11 @@ class RegisterForm(forms.Form):
 
         # بررسی شروع شماره با 09
         if not phone.startswith('09'):
-            raise ValidationError("شماره تلفن باید با 09 شروع شود")
+            raise ValidationError("the phone number must start with 09")
 
         user = User.objects.filter(phone_number=phone)
         if user:
-            raise ValidationError('این شماره تلفن قبلا ثبت شده است')
+            raise ValidationError('this phone number has already been registered')
         return phone
 
 
@@ -134,30 +134,6 @@ class PhoneVerifyCodeForm(forms.Form):
         label="",
         required=True
     )
-
-
-class SetNewPasswordForm(forms.Form):
-    new_password1 = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': "form-label"}),
-        label="رمز عبور جدید",
-        min_length=8,
-        help_text="رمز عبور باید حداقل 8 کاراکتر داشته باشد.",
-
-    )
-    new_password2 = forms.CharField(
-        widget=forms.PasswordInput,
-        label="تکرار رمز عبور جدید",
-        min_length=8
-    )
-
-    def clean(self):
-        cleaned_data = super().clean()
-        pwd1 = cleaned_data.get('new_password1')
-        pwd2 = cleaned_data.get('new_password2')
-
-        if pwd1 and pwd2 and pwd1 != pwd2:
-            raise ValidationError("رمزهای عبور وارد شده مطابقت ندارند.")
-        return cleaned_data
 
 
 class CustomPasswordChangeForm(PasswordChangeForm):
