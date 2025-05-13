@@ -19,6 +19,14 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+
+admin.site.site_header = "flower store admin panel"
+admin.site.site_title = "admin panel | flower store"
+admin.site.index_title = "welcome to the flower store administration"
+
+
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('home.urls', namespace='home')),
