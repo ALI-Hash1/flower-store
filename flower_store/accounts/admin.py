@@ -14,16 +14,23 @@ class UserAdmin(BaseUserAdmin):
     ordering = ('email',)
     fieldsets = (
         ('User Information', {'fields': ('phone_number', 'password', 'last_login', 'email')}),
-        ('Permissions', {'fields': ('is_admin', 'is_active')})
+        ('Permissions', {'fields': ('is_admin', 'is_active', 'groups', 'user_permissions', 'is_superuser')})
     )
     add_fieldsets = (
         ('Add User', {'fields': ('phone_number', 'password1', 'password2')}),
         ('Email', {'fields': ('email',)})
     )
     search_fields = ('email', 'phone_number')
-    filter_horizontal = ()
+    filter_horizontal = ('groups', 'user_permissions')
+    readonly_fields = ('last_login', )
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        is_superuser = request.user.is_superuser
+        if not is_superuser:
+            form.base_fields['is_superuser'].disabled = True
+        return form
 
 
-admin.site.unregister(Group)
 admin.site.register(User, UserAdmin)
 admin.site.register(OtpCode)
