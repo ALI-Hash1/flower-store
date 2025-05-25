@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load cache %}
 
 {% block extra_headers %}
     <link rel="stylesheet" href="{% static 'home/css/home.css' %}">
@@ -7,112 +8,114 @@
 
 {% block content %}
 
-    <main>
+    {% cache 604800 home_page %}
 
-        <!-- Product Cards -->
-        <div class="container my-5">
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                <div class="col">
-                    <div class="card">
-                        <img src="{{host_name}}{{product1.image}}" class="card-img-top" alt={{product1.name}} width="400" height="300">
-                        <div class="card-body">
-                            <h5 class="card-title">{{product1.name}}</h5>
-                            <p class="card-text">{{product1.description}}</p>
-                            <a href="{% url 'products:detail_view' product1.slug %}" class="btn btn-primary">Detail</a>
+        <main>
+            <!-- Product Cards -->
+            <div class="container my-5">
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    <div class="col">
+                        <div class="card">
+                            <img src="{{host_name}}{{product1.image}}" class="card-img-top" alt={{product1.name}} width="400" height="300">
+                            <div class="card-body">
+                                <h5 class="card-title">{{product1.name}}</h5>
+                                <p class="card-text">{{product1.description}}</p>
+                                <a href="{% url 'products:detail_view' product1.slug %}" class="btn btn-primary">Detail</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <img src="{{host_name}}{{product2.image}}" class="card-img-top" alt={{product2.name}} width="400" height="300">
+                            <div class="card-body">
+                                <h5 class="card-title">{{product2.name}}</h5>
+                                <p class="card-text">{{product2.description}}</p>
+                                <a href="{% url 'products:detail_view' product2.slug %}" class="btn btn-primary">Detail</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <img src="{{host_name}}{{product3.image}}" class="card-img-top" alt={{product3.name}} width="400" height="300">
+                            <div class="card-body">
+                                <h5 class="card-title">{{product3.name}}</h5>
+                                <p class="card-text">{{product3.description}}</p>
+                                <a href="{% url 'products:detail_view' product3.slug %}" class="btn btn-primary">Detail</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="card">
-                        <img src="{{host_name}}{{product2.image}}" class="card-img-top" alt={{product2.name}} width="400" height="300">
-                        <div class="card-body">
-                            <h5 class="card-title">{{product2.name}}</h5>
-                            <p class="card-text">{{product2.description}}</p>
-                            <a href="{% url 'products:detail_view' product2.slug %}" class="btn btn-primary">Detail</a>
+            </div>
+            <br>
+
+            <!-- Animated Background -->
+            <div class="animated-bg">
+                <h2>Plants make everything better!</h2>
+            </div>
+            <br>
+
+            <!-- Carousel for Articles -->
+            <div id="articlesCarousel" class="carousel slide my-4" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <a href="{% url 'articles:article' articles.0.slug %}"><img src="{{host_name}}{{articles.0.thumbnail}}" class="d-block w-100" alt="{{articles.0.title}}" width="600" height="500"></a>
+                        <div class="carousel-caption">
+                            <h5>{{articles.0.title}}</h5>
+                            <p>{{articles.0.content|slice:":40"|safe}}...</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <a href="{% url 'articles:article' articles.1.slug %}"><img src="{{host_name}}{{articles.1.thumbnail}}" class="d-block w-100" alt="{{articles.1.title}}" width="600" height="500"></a>
+                        <div class="carousel-caption">
+                            <h5>{{articles.1.title}}</h5>
+                            <p>{{articles.1.content|slice:":40"|safe}}...</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <a href="{% url 'articles:article' articles.2.slug %}"><img src="{{host_name}}{{articles.2.thumbnail}}" class="d-block w-100" alt="{{articles.2.title}}" width="600" height="500"></a>
+                        <div class="carousel-caption">
+                            <h5>{{articles.0.title}}</h5>
+                            <p>{{articles.0.content|slice:":40"|safe}}...</p>
                         </div>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="card">
-                        <img src="{{host_name}}{{product3.image}}" class="card-img-top" alt={{product3.name}} width="400" height="300">
-                        <div class="card-body">
-                            <h5 class="card-title">{{product3.name}}</h5>
-                            <p class="card-text">{{product3.description}}</p>
-                            <a href="{% url 'products:detail_view' product3.slug %}" class="btn btn-primary">Detail</a>
-                        </div>
-                    </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#articlesCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#articlesCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+            <br>
+
+            <!-- Testimonial Carousel -->
+            <div class="reviews-card">
+            <!-- First Review -->
+            <div class="review-row">
+                <div class="review-photo">
+                    <img src="{{host_name}}person1.png" alt="Customer 1">
+                </div>
+                <div class="review-text">
+                    This is the best plant store I’ve ever shopped at! The plants are so healthy and beautiful. Highly recommend to everyone!
                 </div>
             </div>
-        </div>
-        <br>
 
-        <!-- Animated Background -->
-        <div class="animated-bg">
-            <h2>Plants make everything better!</h2>
-        </div>
-        <br>
-
-        <!-- Carousel for Articles -->
-        <div id="articlesCarousel" class="carousel slide my-4" data-bs-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <a href="{% url 'articles:article' articles.0.slug %}"><img src="{{host_name}}{{articles.0.thumbnail}}" class="d-block w-100" alt="{{articles.0.title}}" width="600" height="500"></a>
-                    <div class="carousel-caption">
-                        <h5>{{articles.0.title}}</h5>
-                        <p>{{articles.0.content|slice:":40"|safe}}...</p>
-                    </div>
+            <!-- Second Review -->
+            <div class="review-row">
+                <div class="review-text">
+                    The team is so helpful and knowledgeable. I found exactly what I needed for my garden. Thank you so much!
                 </div>
-                <div class="carousel-item">
-                    <a href="{% url 'articles:article' articles.1.slug %}"><img src="{{host_name}}{{articles.1.thumbnail}}" class="d-block w-100" alt="{{articles.1.title}}" width="600" height="500"></a>
-                    <div class="carousel-caption">
-                        <h5>{{articles.1.title}}</h5>
-                        <p>{{articles.1.content|slice:":40"|safe}}...</p>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <a href="{% url 'articles:article' articles.2.slug %}"><img src="{{host_name}}{{articles.2.thumbnail}}" class="d-block w-100" alt="{{articles.2.title}}" width="600" height="500"></a>
-                    <div class="carousel-caption">
-                        <h5>{{articles.0.title}}</h5>
-                        <p>{{articles.0.content|slice:":40"|safe}}...</p>
-                    </div>
+                <div class="review-photo">
+                    <img src="{{host_name}}person2.png" alt="Customer 2">
                 </div>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#articlesCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#articlesCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        </div>
-        <br>
+        </div><br><br>
 
-        <!-- Testimonial Carousel -->
-        <div class="reviews-card">
-        <!-- First Review -->
-        <div class="review-row">
-            <div class="review-photo">
-                <img src="{{host_name}}person1.png" alt="Customer 1">
-            </div>
-            <div class="review-text">
-                This is the best plant store I’ve ever shopped at! The plants are so healthy and beautiful. Highly recommend to everyone!
-            </div>
-        </div>
+        </main>
 
-        <!-- Second Review -->
-        <div class="review-row">
-            <div class="review-text">
-                The team is so helpful and knowledgeable. I found exactly what I needed for my garden. Thank you so much!
-            </div>
-            <div class="review-photo">
-                <img src="{{host_name}}person2.png" alt="Customer 2">
-            </div>
-        </div>
-    </div><br><br>
-
-    </main>
-
+    {% endcache %}
 
 {% endblock content %}
 

@@ -1,6 +1,8 @@
 from kavenegar import *
 from django.shortcuts import redirect
 from django.db import models
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 
 def send_otp_code(phone_number, code):
@@ -25,3 +27,11 @@ class SEOMixin(models.Model):
 
     class Meta:
         abstract = True
+
+
+class CacheMixin:
+    cache_timeout = 60 * 60 * 24 * 7  # مقدار زمان کش (15 دقیقه)
+
+    @method_decorator(cache_page(cache_timeout))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)

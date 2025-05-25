@@ -1,11 +1,14 @@
-<footer>
-        <div class="footer-about">
-            <h5>About Us</h5>
-            <p>We are passionate about bringing nature closer to you.</p>
-        </div>
-        <div class="social-icons">
-            <a href="#"><i class="bi bi-facebook"></i></a>
-            <a href="#"><i class="bi bi-twitter"></i></a>
-            <a href="#"><i class="bi bi-instagram"></i></a>
-        </div>
-</footer>
+{% load cache %}
+{% cache 2592000 footer %}
+    <footer>
+            <div class="footer-about">
+                <h5>About Us</h5>
+                <p>We are passionate about bringing nature closer to you.</p>
+            </div>
+            <div class="social-icons">
+                <a href="#"><i class="bi bi-facebook"></i></a>
+                <a href="#"><i class="bi bi-twitter"></i></a>
+                <a href="#"><i class="bi bi-instagram"></i></a>
+            </div>
+    </footer>
+{% endcache %}

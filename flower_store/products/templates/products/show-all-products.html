@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load cache %}
 
 {% block extra_headers %}
     <link rel="stylesheet" href="{% static 'articles/css/show-articles-styles.css' %}">
@@ -7,49 +8,53 @@
 
 {% block content %}
 
-    <br><br><hr><br><br>
+    {% cache 604800 all-product-cache %}
 
-    <div class="banner">
-        <h1>Website Products</h1>
-        <p>All our products</p>
-    </div>
-    <br><br>
+        <br><br><hr><br><br>
 
-    <div class="articles-container">
-        <div class="row g-4">
+        <div class="banner">
+            <h1>Website Products</h1>
+            <p>All our products</p>
+        </div>
+        <br><br>
 
-            {% for product in products %}
-                <div class="col-md-4">
-                    <div class="article-card">
-                        <img style="height=800px;" src="{{host_name}}{{product.image}}" alt="{{product.keyword}}">
-                        <a style="text-decoration: none;" href="{% url 'products:detail_view' product.slug %}">
-                            <div class="article-card-body">
-                                <h2 class="article-title">{{product.name}}</h2>
-                                <div class="article-meta">
-                                    <div class="meta-item"><i class="bi bi-tags"></i> Category: {{product.category}}</div>
-                                    <div class="meta-item"><i class="bi bi-currency-dollar"></i>Price: <b>{{product.price}}$</b></div>
+        <div class="articles-container">
+            <div class="row g-4">
+
+                {% for product in products %}
+                    <div class="col-md-4">
+                        <div class="article-card">
+                            <img style="height=800px;" src="{{host_name}}{{product.image}}" alt="{{product.keyword}}">
+                            <a style="text-decoration: none;" href="{% url 'products:detail_view' product.slug %}">
+                                <div class="article-card-body">
+                                    <h2 class="article-title">{{product.name}}</h2>
+                                    <div class="article-meta">
+                                        <div class="meta-item"><i class="bi bi-tags"></i> Category: {{product.category}}</div>
+                                        <div class="meta-item"><i class="bi bi-currency-dollar"></i>Price: <b>{{product.price}}$</b></div>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
+                            </a>
+                        </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                {% if products.has_previous %}
+                    <button onclick="window.location.href='?page={{ products.previous_page_number }}'">&laquo; previous</button>
+                {% endif %}
+                {% if products.has_next %}
+                    <button onclick="window.location.href='?page={{ products.next_page_number }}'">Next &raquo;</button>
+                {% endif %}
+
+            </div>
 
         </div>
 
-        <!-- Pagination -->
-        <div class="pagination">
-            {% if products.has_previous %}
-                <button onclick="window.location.href='?page={{ products.previous_page_number }}'">&laquo; previous</button>
-            {% endif %}
-            {% if products.has_next %}
-                <button onclick="window.location.href='?page={{ products.next_page_number }}'">Next &raquo;</button>
-            {% endif %}
+        <br><br><br>
 
-        </div>
-
-    </div>
-
-    <br><br><br>
+    {% endcache %}
 
 {% endblock %}

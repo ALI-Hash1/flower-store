@@ -1,4 +1,4 @@
-
+{% load cache %}
 <!-- Header -->
 <header>
     <nav class="navbar navbar-expand-lg navbar-dark">
@@ -10,19 +10,27 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     {% if request.user.is_authenticated %}
-                        <li><a href="{% url 'accounts:user_logout' %}">Logout</a></li>
-                        <li><a href="{% url 'orders:cart' %}">cart</a></li>
-                        <li><a href="{% url 'accounts:user_profile' request.user.id %}">Profile</a></li>
+                        {% cache 2592000 list-header-1 %}
+                            <li><a href="{% url 'accounts:user_logout' %}">Logout</a></li>
+                            <li><a href="{% url 'orders:cart' %}">cart</a></li>
+                            <li><a href="{% url 'accounts:user_profile' request.user.id %}">Profile</a></li>
+                        {% endcache %}
                         {% if request.user.is_admin %}
-                            <li><a href="{% url 'home:bucket' %}">bucket</a></li>
+                            {% cache 2592000 list-header-2 %}
+                                <li><a href="{% url 'home:bucket' %}">bucket</a></li>
+                            {% endcache %}
                         {% endif %}
                     {% else %}
-                        <li><a href="{% url 'accounts:user_register' %}">Register</a></li>
-                        <li><a href="{% url 'accounts:user_login' %}">Login</a></li>
+                        {% cache 2592000 list-header-3 %}
+                            <li><a href="{% url 'accounts:user_register' %}">Register</a></li>
+                            <li><a href="{% url 'accounts:user_login' %}">Login</a></li>
+                        {% endcache %}
                     {% endif %}
-                    <li><a href="{% url 'articles:all_articles' %}">articles</a></li>
-                    <li><a href="{% url 'products:all_products' %}">products</a></li>
-                    <li><a href="{% url 'home:home_page' %}">Home</a></li>
+                    {% cache 2592000 list-header-4 %}
+                        <li><a href="{% url 'articles:all_articles' %}">articles</a></li>
+                        <li><a href="{% url 'products:all_products' %}">products</a></li>
+                        <li><a href="{% url 'home:home_page' %}">Home</a></li>
+                    {% endcache %}
                 </ul>
             </div>
         </div>
