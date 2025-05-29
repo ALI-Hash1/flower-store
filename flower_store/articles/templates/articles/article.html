@@ -4,6 +4,9 @@
 {% block extra_headers %}
     <link rel="stylesheet" href="{% static 'articles/css/article-styles.css' %}">
     <link rel="stylesheet" href="{% static 'products/css/product-styles.css' %}">
+    <meta name="description" content="{{article.keyword}}">
+    <meta name="keywords" content="{{article.meta_description}}">
+
 {% endblock %}
 
 {% block content %}

@@ -7,7 +7,6 @@ from django.conf import settings
 import wget
 
 
-
 class Product(SEOMixin, models.Model):
     category = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='products')
     name = models.CharField(max_length=255)

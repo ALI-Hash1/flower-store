@@ -3,6 +3,8 @@
 
 {% block extra_headers %}
     <link rel="stylesheet" href="{% static 'products/css/product-styles.css' %}">
+    <meta name="description" content="{{product.keyword}}">
+    <meta name="keywords" content="{{product.meta_description}}">
     <style>
         .product-image {
             background: url('{{host_name}}{{product.image}}') no-repeat center center / cover;
